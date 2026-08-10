@@ -1,0 +1,49 @@
+@page
+@using FabrikaTakipPaneli.Models
+@model FabrikaTakipPaneli.Pages.StockEntries.IndexModel
+@{
+    ViewData["Title"] = "Stok Hareketleri";
+}
+
+<h1>Stok Hareketleri</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Yeni Stok Hareketi</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ürün</th>
+            <th>Tip</th>
+            <th>Miktar</th>
+            <th>Birim Fiyat</th>
+            <th>Tarih</th>
+            <th>Kullanıcı</th>
+            <th>Not</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.StockEntries)
+        {
+            <tr>
+                <td>@entry.ProductName</td>
+                <td>@(entry.Type == StockEntryType.In ? "Giriş" : "Çıkış")</td>
+                <td>@entry.Quantity.ToString("N2")</td>
+                <td>@(entry.UnitPrice?.ToString("N2"))</td>
+                <td>@entry.EntryDate.ToString("g")</td>
+                <td>@entry.UserName</td>
+                <td>@entry.Note</td>
+                <td>
+                    @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
+                    {
+                        <a asp-page="Edit" asp-route-id="@entry.Id">Düzenle</a>
+                        <span>|</span>
+                        <a asp-page="Delete" asp-route-id="@entry.Id">Sil</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

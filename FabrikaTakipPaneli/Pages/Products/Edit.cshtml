@@ -1,0 +1,43 @@
+@page "{id:int}"
+@model FabrikaTakipPaneli.Pages.Products.EditModel
+@{
+    ViewData["Title"] = "Ürün Düzenle";
+}
+
+<h1>Ürün Düzenle</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="Input.Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group mb-2">
+        <label asp-for="Input.Name" class="control-label"></label>
+        <input asp-for="Input.Name" class="form-control" />
+        <span asp-validation-for="Input.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-2">
+        <label asp-for="Input.Unit" class="control-label"></label>
+        <input asp-for="Input.Unit" class="form-control" />
+        <span asp-validation-for="Input.Unit" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-2">
+        <label asp-for="Input.Category" class="control-label"></label>
+        <input asp-for="Input.Category" class="form-control" />
+        <span asp-validation-for="Input.Category" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-2">
+        <label asp-for="Input.UnitPrice" class="control-label"></label>
+        <input asp-for="Input.UnitPrice" class="form-control" />
+        <span asp-validation-for="Input.UnitPrice" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Input.Description" class="control-label"></label>
+        <textarea asp-for="Input.Description" class="form-control"></textarea>
+        <span asp-validation-for="Input.Description" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <a asp-page="Index" class="btn btn-secondary">Vazgeç</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

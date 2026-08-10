@@ -1,0 +1,47 @@
+@page
+@model FabrikaTakipPaneli.Pages.Products.IndexModel
+@{
+    ViewData["Title"] = "Ürünler";
+}
+
+<h1>Ürünler</h1>
+
+@if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
+{
+    <p>
+        <a asp-page="Create" class="btn btn-primary">Yeni Ürün</a>
+    </p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ad</th>
+            <th>Birim</th>
+            <th>Kategori</th>
+            <th>Birim Fiyat</th>
+            <th>Mevcut Stok</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model.Products)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Unit</td>
+                <td>@product.Category</td>
+                <td>@product.UnitPrice.ToString("N2")</td>
+                <td>@product.CurrentStock.ToString("N2")</td>
+                <td>
+                    @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
+                    {
+                        <a asp-page="Edit" asp-route-id="@product.Id">Düzenle</a>
+                        <span>|</span>
+                        <a asp-page="Delete" asp-route-id="@product.Id">Sil</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
