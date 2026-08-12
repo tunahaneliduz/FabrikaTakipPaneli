@@ -23,6 +23,8 @@ public class StockEntry
 
     public DateTime EntryDate { get; set; } = DateTime.Now;
 
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+
     [Required]
     public string UserId { get; set; } = string.Empty;
     public IdentityUser? User { get; set; }

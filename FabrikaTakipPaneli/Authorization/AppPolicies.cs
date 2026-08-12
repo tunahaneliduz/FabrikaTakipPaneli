@@ -13,7 +13,4 @@ public static class AppPolicies
 
     /// <summary>Admin veya Personel - stok hareketi girebilir ve listeleyebilir.</summary>
     public const string EnterStock = "EnterStock";
-
-    /// <summary>Sadece Admin - stok hareketi düzenleme/silme.</summary>
-    public const string ManageStockEntries = "ManageStockEntries";
 }

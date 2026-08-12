@@ -9,7 +9,35 @@
 
 <p>
     <a asp-page="Create" class="btn btn-primary">Yeni Stok Hareketi</a>
+    <a asp-page="Index" asp-page-handler="ExportExcel"
+       asp-route-SearchTerm="@Model.SearchTerm"
+       asp-route-StartDate="@Model.StartDate?.ToString("yyyy-MM-dd")"
+       asp-route-EndDate="@Model.EndDate?.ToString("yyyy-MM-dd")"
+       class="btn btn-success">Excel'e Aktar</a>
 </p>
+
+@if (!User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
+{
+    <p class="text-muted"><small>Kayıtlar sadece oluşturulduğu gün içinde (gece yarısına kadar) düzenlenebilir veya silinebilir. Bu süre geçtikten sonra yalnızca yönetici değişiklik yapabilir.</small></p>
+}
+
+<form method="get" class="row row-cols-lg-auto g-2 align-items-center mb-3">
+    <div class="col-12">
+        <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Ürün adına göre ara..." />
+    </div>
+    <div class="col-12">
+        <label class="me-1">Başlangıç:</label>
+        <input type="date" name="StartDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" class="form-control" />
+    </div>
+    <div class="col-12">
+        <label class="me-1">Bitiş:</label>
+        <input type="date" name="EndDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" class="form-control" />
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-outline-secondary">Ara</button>
+        <a asp-page="Index" class="btn btn-outline-secondary">Temizle</a>
+    </div>
+</form>
 
 <table class="table">
     <thead>
@@ -36,14 +64,31 @@
                 <td>@entry.UserName</td>
                 <td>@entry.Note</td>
                 <td>
-                    @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
+                    @if (entry.CanModify)
                     {
                         <a asp-page="Edit" asp-route-id="@entry.Id">Düzenle</a>
                         <span>|</span>
                         <a asp-page="Delete" asp-route-id="@entry.Id">Sil</a>
+                    }
+                    else if (entry.IsOwnEntry)
+                    {
+                        <span class="text-muted" title="Kayıtlar sadece oluşturulduğu gün içinde düzenlenebilir/silinebilir.">Süre doldu</span>
                     }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<partial name="_Pagination" model="@(new FabrikaTakipPaneli.Pages.Shared.PaginationViewModel
+{
+    CurrentPage = Model.PageIndex,
+    TotalPages = Model.TotalPages,
+    PageName = "Index",
+    RouteData = new Dictionary<string, string?>
+    {
+        ["SearchTerm"] = Model.SearchTerm,
+        ["StartDate"] = Model.StartDate?.ToString("yyyy-MM-dd"),
+        ["EndDate"] = Model.EndDate?.ToString("yyyy-MM-dd")
+    }
+})" />

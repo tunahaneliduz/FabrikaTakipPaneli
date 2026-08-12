@@ -1,0 +1,51 @@
+@page
+@model FabrikaTakipPaneli.Pages.Admin.Users.IndexModel
+@using FabrikaTakipPaneli.Authorization
+@{
+    ViewData["Title"] = "Kullanıcılar";
+}
+
+<h1>Kullanıcılar</h1>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-info">@Model.StatusMessage</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>E-posta</th>
+            <th>Mevcut Rol</th>
+            <th>Rolü Değiştir</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@(user.CurrentRole ?? "(rol yok)")</td>
+                <td>
+                    @if (user.IsCurrentUser)
+                    {
+                        <span class="text-muted">Kendi rolünüzü değiştiremezsiniz</span>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="ChangeRole" class="d-flex gap-2">
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <select name="role" class="form-select form-select-sm" style="width: auto;">
+                                @foreach (var role in AppRoles.All)
+                                {
+                                    <option value="@role" selected="@(role == user.CurrentRole)">@role</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Kaydet</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

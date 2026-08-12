@@ -29,6 +29,12 @@
         <input asp-for="Input.UnitPrice" class="form-control" />
         <span asp-validation-for="Input.UnitPrice" class="text-danger"></span>
     </div>
+    <div class="form-group mb-2">
+        <label asp-for="Input.MinStockLevel" class="control-label"></label>
+        <input asp-for="Input.MinStockLevel" class="form-control" />
+        <small class="form-text text-muted">Boş bırakılırsa kritik stok durumu için 0 eşiği kullanılır.</small>
+        <span asp-validation-for="Input.MinStockLevel" class="text-danger"></span>
+    </div>
     <div class="form-group mb-3">
         <label asp-for="Input.Description" class="control-label"></label>
         <textarea asp-for="Input.Description" class="form-control"></textarea>

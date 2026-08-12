@@ -35,7 +35,8 @@ public class CreateModel : PageModel
             Unit = Input.Unit,
             Description = Input.Description,
             Category = Input.Category,
-            UnitPrice = Input.UnitPrice
+            UnitPrice = Input.UnitPrice,
+            MinStockLevel = Input.MinStockLevel
         };
 
         _context.Products.Add(product);
@@ -67,5 +68,9 @@ public class CreateModel : PageModel
         [Range(0, double.MaxValue, ErrorMessage = "Birim fiyat negatif olamaz.")]
         [Display(Name = "Birim Fiyat")]
         public decimal UnitPrice { get; set; }
+
+        [Range(0, double.MaxValue, ErrorMessage = "Min stok eşiği negatif olamaz.")]
+        [Display(Name = "Min Stok Eşiği")]
+        public decimal? MinStockLevel { get; set; }
     }
 }

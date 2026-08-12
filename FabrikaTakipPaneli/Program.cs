@@ -19,8 +19,7 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy(AppPolicies.AdminOnly, policy => policy.RequireRole(AppRoles.Admin))
     .AddPolicy(AppPolicies.ViewProducts, policy => policy.RequireRole(AppRoles.Admin, AppRoles.Personel))
     .AddPolicy(AppPolicies.ManageProducts, policy => policy.RequireRole(AppRoles.Admin))
-    .AddPolicy(AppPolicies.EnterStock, policy => policy.RequireRole(AppRoles.Admin, AppRoles.Personel))
-    .AddPolicy(AppPolicies.ManageStockEntries, policy => policy.RequireRole(AppRoles.Admin));
+    .AddPolicy(AppPolicies.EnterStock, policy => policy.RequireRole(AppRoles.Admin, AppRoles.Personel));
 
 // Add services to the container.
 builder.Services.AddRazorPages(options =>
@@ -31,8 +30,10 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AuthorizePage("/Products/Delete", AppPolicies.ManageProducts);
 
     options.Conventions.AuthorizeFolder("/StockEntries", AppPolicies.EnterStock);
-    options.Conventions.AuthorizePage("/StockEntries/Edit", AppPolicies.ManageStockEntries);
-    options.Conventions.AuthorizePage("/StockEntries/Delete", AppPolicies.ManageStockEntries);
+
+    options.Conventions.AuthorizeFolder("/Dashboard", AppPolicies.ViewProducts);
+
+    options.Conventions.AuthorizeFolder("/Admin", AppPolicies.AdminOnly);
 });
 
 var app = builder.Build();

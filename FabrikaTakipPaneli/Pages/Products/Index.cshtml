@@ -13,6 +13,16 @@
     </p>
 }
 
+<form method="get" class="row row-cols-lg-auto g-2 align-items-center mb-3">
+    <div class="col-12">
+        <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Ürün adına göre ara..." />
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-outline-secondary">Ara</button>
+        <a asp-page="Index" class="btn btn-outline-secondary">Temizle</a>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -45,3 +55,11 @@
         }
     </tbody>
 </table>
+
+<partial name="_Pagination" model="@(new FabrikaTakipPaneli.Pages.Shared.PaginationViewModel
+{
+    CurrentPage = Model.PageIndex,
+    TotalPages = Model.TotalPages,
+    PageName = "Index",
+    RouteData = new Dictionary<string, string?> { ["SearchTerm"] = Model.SearchTerm }
+})" />

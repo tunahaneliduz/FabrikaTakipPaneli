@@ -5,13 +5,11 @@ namespace FabrikaTakipPaneli.Data;
 
 public static class RoleSeeder
 {
-    public static readonly string[] Roles = { AppRoles.Admin, AppRoles.Personel };
-
     public static async Task SeedAsync(IServiceProvider services)
     {
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-        foreach (var role in Roles)
+        foreach (var role in AppRoles.All)
         {
             if (!await roleManager.RoleExistsAsync(role))
             {

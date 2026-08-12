@@ -1,0 +1,21 @@
+@model FabrikaTakipPaneli.Pages.Shared.PaginationViewModel
+
+@if (Model.TotalPages > 1)
+{
+    var prevRouteData = new Dictionary<string, string?>(Model.RouteData) { ["PageIndex"] = (Model.CurrentPage - 1).ToString() };
+    var nextRouteData = new Dictionary<string, string?>(Model.RouteData) { ["PageIndex"] = (Model.CurrentPage + 1).ToString() };
+
+    <nav aria-label="Sayfalama">
+        <ul class="pagination">
+            <li class="page-item @(Model.CurrentPage <= 1 ? "disabled" : "")">
+                <a class="page-link" asp-page="@Model.PageName" asp-all-route-data="prevRouteData">Önceki</a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">Sayfa @Model.CurrentPage / @Model.TotalPages</span>
+            </li>
+            <li class="page-item @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-page="@Model.PageName" asp-all-route-data="nextRouteData">Sonraki</a>
+            </li>
+        </ul>
+    </nav>
+}

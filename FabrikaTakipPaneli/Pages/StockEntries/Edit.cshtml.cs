@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using FabrikaTakipPaneli.Authorization;
 using FabrikaTakipPaneli.Data;
 using FabrikaTakipPaneli.Models;
 
@@ -11,10 +13,12 @@ namespace FabrikaTakipPaneli.Pages.StockEntries;
 public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public EditModel(ApplicationDbContext context)
+    public EditModel(ApplicationDbContext context, UserManager<IdentityUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     [BindProperty]
@@ -28,6 +32,11 @@ public class EditModel : PageModel
         if (stockEntry is null)
         {
             return NotFound();
+        }
+
+        if (!StockEntryAccess.CanModify(stockEntry, _userManager.GetUserId(User), User.IsInRole(AppRoles.Admin)))
+        {
+            return Forbid();
         }
 
         Input = new InputModel
@@ -47,16 +56,21 @@ public class EditModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid)
-        {
-            await LoadProductOptionsAsync();
-            return Page();
-        }
-
         var stockEntry = await _context.StockEntries.FindAsync(Input.Id);
         if (stockEntry is null)
         {
             return NotFound();
+        }
+
+        if (!StockEntryAccess.CanModify(stockEntry, _userManager.GetUserId(User), User.IsInRole(AppRoles.Admin)))
+        {
+            return Forbid();
+        }
+
+        if (!ModelState.IsValid)
+        {
+            await LoadProductOptionsAsync();
+            return Page();
         }
 
         stockEntry.ProductId = Input.ProductId;

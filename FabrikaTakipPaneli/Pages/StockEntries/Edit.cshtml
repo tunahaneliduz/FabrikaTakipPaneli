@@ -6,6 +6,11 @@
 
 <h1>Stok Hareketi Düzenle</h1>
 
+@if (!User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
+{
+    <p class="text-muted"><small>Kayıtlar sadece oluşturulduğu gün içinde düzenlenebilir.</small></p>
+}
+
 <form method="post">
     <input type="hidden" asp-for="Input.Id" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>

@@ -6,6 +6,11 @@
 
 <h1>Stok Hareketi Sil</h1>
 
+@if (!User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
+{
+    <p class="text-muted"><small>Kayıtlar sadece oluşturulduğu gün içinde silinebilir.</small></p>
+}
+
 <h3>Bu stok hareketini silmek istediğinize emin misiniz?</h3>
 
 <div>

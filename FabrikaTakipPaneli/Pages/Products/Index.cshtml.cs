@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using FabrikaTakipPaneli.Data;
@@ -14,12 +15,35 @@ public class IndexModel : PageModel
         _context = context;
     }
 
+    private const int PageSize = 10;
+
+    [BindProperty(SupportsGet = true)]
+    public string? SearchTerm { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public int PageIndex { get; set; } = 1;
+
+    public int TotalPages { get; set; }
+
     public IList<ProductListItem> Products { get; set; } = new List<ProductListItem>();
 
     public async Task OnGetAsync()
     {
-        Products = await _context.Products
+        var query = _context.Products.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(SearchTerm))
+        {
+            query = query.Where(p => EF.Functions.Like(p.Name, $"%{SearchTerm}%"));
+        }
+
+        var totalCount = await query.CountAsync();
+        TotalPages = Math.Max(1, (int)Math.Ceiling(totalCount / (double)PageSize));
+        PageIndex = Math.Clamp(PageIndex, 1, TotalPages);
+
+        Products = await query
             .OrderBy(p => p.Name)
+            .Skip((PageIndex - 1) * PageSize)
+            .Take(PageSize)
             .Select(p => new ProductListItem
             {
                 Id = p.Id,

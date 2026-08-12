@@ -24,5 +24,8 @@ public class Product
     [Column(TypeName = "decimal(18,2)")]
     public decimal UnitPrice { get; set; }
 
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal? MinStockLevel { get; set; }
+
     public ICollection<StockEntry> StockEntries { get; set; } = new List<StockEntry>();
 }

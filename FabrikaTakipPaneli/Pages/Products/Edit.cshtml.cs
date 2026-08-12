@@ -33,7 +33,8 @@ public class EditModel : PageModel
             Unit = product.Unit,
             Description = product.Description,
             Category = product.Category,
-            UnitPrice = product.UnitPrice
+            UnitPrice = product.UnitPrice,
+            MinStockLevel = product.MinStockLevel
         };
 
         return Page();
@@ -57,6 +58,7 @@ public class EditModel : PageModel
         product.Description = Input.Description;
         product.Category = Input.Category;
         product.UnitPrice = Input.UnitPrice;
+        product.MinStockLevel = Input.MinStockLevel;
 
         await _context.SaveChangesAsync();
 
@@ -88,5 +90,9 @@ public class EditModel : PageModel
         [Range(0, double.MaxValue, ErrorMessage = "Birim fiyat negatif olamaz.")]
         [Display(Name = "Birim Fiyat")]
         public decimal UnitPrice { get; set; }
+
+        [Range(0, double.MaxValue, ErrorMessage = "Min stok eşiği negatif olamaz.")]
+        [Display(Name = "Min Stok Eşiği")]
+        public decimal? MinStockLevel { get; set; }
     }
 }

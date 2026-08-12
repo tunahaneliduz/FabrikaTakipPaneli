@@ -53,7 +53,8 @@ public class CreateModel : PageModel
             UnitPrice = Input.UnitPrice,
             EntryDate = Input.EntryDate,
             Note = Input.Note,
-            UserId = userId
+            UserId = userId,
+            CreatedAt = DateTime.Now
         };
 
         _context.StockEntries.Add(stockEntry);

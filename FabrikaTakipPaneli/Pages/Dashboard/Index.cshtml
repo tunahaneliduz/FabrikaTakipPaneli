@@ -1,0 +1,203 @@
+@page
+@model FabrikaTakipPaneli.Pages.Dashboard.IndexModel
+@using System.Text.Json
+@using FabrikaTakipPaneli.Models
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Dashboard</h1>
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-bg-primary h-100">
+            <div class="card-body">
+                <div class="fs-2 fw-bold">@Model.TotalProductCount</div>
+                <div>Toplam Ürün Sayısı</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-bg-secondary h-100">
+            <div class="card-body">
+                <div class="fs-2 fw-bold">@Model.TotalStockEntryCount</div>
+                <div>Toplam Stok Hareketi</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-bg-info h-100">
+            <div class="card-body">
+                <div class="fs-2 fw-bold">@Model.TodayEntryCount</div>
+                <div>Bugünkü Hareket Sayısı</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-bg-danger h-100">
+            <div class="card-body">
+                <div class="fs-2 fw-bold">@Model.CriticalStockProductCount</div>
+                <div>Kritik Stoklu Ürün (Min Eşik Altı)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">Kritik Stok - En Düşük Stoklu Ürünler</div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th>Ürün</th>
+                            <th>Birim</th>
+                            <th class="text-end">Mevcut Stok</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.LowStockProducts.Count == 0)
+                        {
+                            <tr><td colspan="3" class="text-muted p-2">Ürün bulunamadı.</td></tr>
+                        }
+                        @foreach (var p in Model.LowStockProducts)
+                        {
+                            <tr>
+                                <td>@p.Name</td>
+                                <td>@p.Unit</td>
+                                <td class="text-end">
+                                    @if (p.IsCritical)
+                                    {
+                                        <span class="badge text-bg-danger">@p.CurrentStock.ToString("N2")</span>
+                                    }
+                                    else
+                                    {
+                                        @p.CurrentStock.ToString("N2")
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">Son Stok Hareketleri</div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th>Ürün</th>
+                            <th>Tip</th>
+                            <th class="text-end">Miktar</th>
+                            <th>Tarih</th>
+                            <th>Kullanıcı</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RecentEntries.Count == 0)
+                        {
+                            <tr><td colspan="5" class="text-muted p-2">Hareket bulunamadı.</td></tr>
+                        }
+                        @foreach (var e in Model.RecentEntries)
+                        {
+                            <tr>
+                                <td>@e.ProductName</td>
+                                <td>
+                                    @if (e.Type == StockEntryType.In)
+                                    {
+                                        <span class="badge text-bg-success">Giriş</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge text-bg-warning">Çıkış</span>
+                                    }
+                                </td>
+                                <td class="text-end">@e.Quantity.ToString("N2")</td>
+                                <td>@e.EntryDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td>@e.UserName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">En Düşük Stoklu Ürünler (Grafik)</div>
+            <div class="card-body">
+                <canvas id="lowStockChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">Son @Model.TrendChartLabels.Count Günlük Giriş/Çıkış Trendi</div>
+            <div class="card-body">
+                <canvas id="trendChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/chart.js/chart.umd.min.js"></script>
+    <script>
+        const lowStockLabels = @Html.Raw(JsonSerializer.Serialize(Model.LowStockChartLabels));
+        const lowStockValues = @Html.Raw(JsonSerializer.Serialize(Model.LowStockChartValues));
+        const trendLabels = @Html.Raw(JsonSerializer.Serialize(Model.TrendChartLabels));
+        const trendInValues = @Html.Raw(JsonSerializer.Serialize(Model.TrendChartInValues));
+        const trendOutValues = @Html.Raw(JsonSerializer.Serialize(Model.TrendChartOutValues));
+
+        new Chart(document.getElementById('lowStockChart'), {
+            type: 'bar',
+            data: {
+                labels: lowStockLabels,
+                datasets: [{
+                    label: 'Mevcut Stok',
+                    data: lowStockValues,
+                    backgroundColor: lowStockValues.map(v => v <= 0 ? '#dc3545' : '#0d6efd')
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: trendLabels,
+                datasets: [
+                    {
+                        label: 'Giriş',
+                        data: trendInValues,
+                        borderColor: '#198754',
+                        backgroundColor: '#198754',
+                        tension: 0.2
+                    },
+                    {
+                        label: 'Çıkış',
+                        data: trendOutValues,
+                        borderColor: '#fd7e14',
+                        backgroundColor: '#fd7e14',
+                        tension: 0.2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    </script>
+}

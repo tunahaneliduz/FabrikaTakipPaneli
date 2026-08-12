@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using FabrikaTakipPaneli.Authorization;
 using FabrikaTakipPaneli.Data;
 
 namespace FabrikaTakipPaneli.Pages.StockEntries;
@@ -8,10 +10,12 @@ namespace FabrikaTakipPaneli.Pages.StockEntries;
 public class DeleteModel : PageModel
 {
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public DeleteModel(ApplicationDbContext context)
+    public DeleteModel(ApplicationDbContext context, UserManager<IdentityUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     public int Id { get; set; }
@@ -32,6 +36,11 @@ public class DeleteModel : PageModel
             return NotFound();
         }
 
+        if (!StockEntryAccess.CanModify(stockEntry, _userManager.GetUserId(User), User.IsInRole(AppRoles.Admin)))
+        {
+            return Forbid();
+        }
+
         Id = stockEntry.Id;
         ProductName = stockEntry.Product!.Name;
         Type = stockEntry.Type;
@@ -48,6 +57,11 @@ public class DeleteModel : PageModel
         if (stockEntry is null)
         {
             return NotFound();
+        }
+
+        if (!StockEntryAccess.CanModify(stockEntry, _userManager.GetUserId(User), User.IsInRole(AppRoles.Admin)))
+        {
+            return Forbid();
         }
 
         _context.StockEntries.Remove(stockEntry);
