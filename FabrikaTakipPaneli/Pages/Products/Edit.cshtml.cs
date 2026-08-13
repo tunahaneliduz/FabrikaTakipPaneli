@@ -18,6 +18,18 @@ public class EditModel : PageModel
     [BindProperty]
     public InputModel Input { get; set; } = new();
 
+    public IList<string> ExistingLocations { get; set; } = new List<string>();
+
+    private async Task LoadExistingLocationsAsync()
+    {
+        ExistingLocations = await _context.Products
+            .Where(p => p.Location != null && p.Location != "")
+            .Select(p => p.Location!)
+            .Distinct()
+            .OrderBy(l => l)
+            .ToListAsync();
+    }
+
     public async Task<IActionResult> OnGetAsync(int id)
     {
         var product = await _context.Products.FindAsync(id);
@@ -33,9 +45,12 @@ public class EditModel : PageModel
             Unit = product.Unit,
             Description = product.Description,
             Category = product.Category,
+            Location = product.Location,
             UnitPrice = product.UnitPrice,
             MinStockLevel = product.MinStockLevel
         };
+
+        await LoadExistingLocationsAsync();
 
         return Page();
     }
@@ -44,6 +59,7 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
+            await LoadExistingLocationsAsync();
             return Page();
         }
 
@@ -57,6 +73,7 @@ public class EditModel : PageModel
         product.Unit = Input.Unit;
         product.Description = Input.Description;
         product.Category = Input.Category;
+        product.Location = Input.Location;
         product.UnitPrice = Input.UnitPrice;
         product.MinStockLevel = Input.MinStockLevel;
 
@@ -86,6 +103,10 @@ public class EditModel : PageModel
         [MaxLength(100)]
         [Display(Name = "Kategori")]
         public string? Category { get; set; }
+
+        [MaxLength(150)]
+        [Display(Name = "Konum/Bölüm")]
+        public string? Location { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Birim fiyat negatif olamaz.")]
         [Display(Name = "Birim Fiyat")]

@@ -50,6 +50,7 @@ public class IndexModel : PageModel
                 Name = p.Name,
                 Unit = p.Unit,
                 Category = p.Category,
+                Location = p.Location,
                 UnitPrice = p.UnitPrice,
                 CurrentStock = p.StockEntries.Sum(s => s.Type == StockEntryType.In ? s.Quantity : -s.Quantity)
             })
@@ -62,6 +63,7 @@ public class IndexModel : PageModel
         public string Name { get; set; } = string.Empty;
         public string Unit { get; set; } = string.Empty;
         public string? Category { get; set; }
+        public string? Location { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal CurrentStock { get; set; }
     }

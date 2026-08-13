@@ -11,6 +11,7 @@ public class IndexModel : PageModel
     private const int LowStockChartCount = 10;
     private const int RecentEntriesCount = 10;
     private const int TrendDays = 14;
+    private const string UnspecifiedLocation = "Belirtilmemiş";
 
     private readonly ApplicationDbContext _context;
 
@@ -26,6 +27,7 @@ public class IndexModel : PageModel
 
     public IList<LowStockItem> LowStockProducts { get; set; } = new List<LowStockItem>();
     public IList<RecentEntryItem> RecentEntries { get; set; } = new List<RecentEntryItem>();
+    public IList<LocationSummaryItem> LocationSummaries { get; set; } = new List<LocationSummaryItem>();
 
     public IList<string> LowStockChartLabels { get; set; } = new List<string>();
     public IList<decimal> LowStockChartValues { get; set; } = new List<decimal>();
@@ -48,6 +50,7 @@ public class IndexModel : PageModel
                 p.Id,
                 p.Name,
                 p.Unit,
+                p.Location,
                 p.MinStockLevel,
                 CurrentStock = p.StockEntries.Sum(s => s.Type == StockEntryType.In ? s.Quantity : -s.Quantity)
             })
@@ -65,6 +68,19 @@ public class IndexModel : PageModel
                 CurrentStock = p.CurrentStock,
                 IsCritical = p.CurrentStock <= (p.MinStockLevel ?? 0)
             })
+            .ToList();
+
+        LocationSummaries = productStocks
+            .Select(p => new { p.Name, p.MinStockLevel, p.CurrentStock, Location = string.IsNullOrWhiteSpace(p.Location) ? null : p.Location.Trim() })
+            .GroupBy(p => p.Location ?? string.Empty, StringComparer.OrdinalIgnoreCase)
+            .Select(g => new LocationSummaryItem
+            {
+                Location = string.IsNullOrEmpty(g.Key) ? UnspecifiedLocation : g.First(x => !string.IsNullOrEmpty(x.Location)).Location!,
+                ProductCount = g.Count(),
+                CriticalCount = g.Count(x => x.CurrentStock <= (x.MinStockLevel ?? 0))
+            })
+            .OrderBy(x => x.Location == UnspecifiedLocation ? 1 : 0)
+            .ThenBy(x => x.Location, StringComparer.CurrentCultureIgnoreCase)
             .ToList();
 
         var lowStockForChart = productStocks.Take(LowStockChartCount).ToList();
@@ -123,5 +139,12 @@ public class IndexModel : PageModel
         public decimal Quantity { get; set; }
         public DateTime EntryDate { get; set; }
         public string? UserName { get; set; }
+    }
+
+    public class LocationSummaryItem
+    {
+        public string Location { get; set; } = string.Empty;
+        public int ProductCount { get; set; }
+        public int CriticalCount { get; set; }
     }
 }

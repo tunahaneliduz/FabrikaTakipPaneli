@@ -6,7 +6,7 @@
 
 <h1><i class="bi bi-plus-lg"></i> Yeni Ürün</h1>
 
-<div class="panel" style="max-width: 640px;">
+<div class="panel" style="max-width: 720px;">
 <div class="panel-body">
 <form method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -24,6 +24,17 @@
         <label asp-for="Input.Category" class="control-label"></label>
         <input asp-for="Input.Category" class="form-control" />
         <span asp-validation-for="Input.Category" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-2">
+        <label asp-for="Input.Location" class="control-label"></label>
+        <input asp-for="Input.Location" class="form-control" list="locationOptions" placeholder="Örn. Margarin Deposu" autocomplete="off" />
+        <datalist id="locationOptions">
+            @foreach (var loc in Model.ExistingLocations)
+            {
+                <option value="@loc"></option>
+            }
+        </datalist>
+        <span asp-validation-for="Input.Location" class="text-danger"></span>
     </div>
     <div class="form-group mb-2">
         <label asp-for="Input.UnitPrice" class="control-label"></label>

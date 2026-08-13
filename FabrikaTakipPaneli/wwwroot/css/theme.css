@@ -25,77 +25,95 @@
 :root {
   --bs-font-sans-serif: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  --app-accent: #0d9488;
-  --app-accent-hover: #0f766e;
-  --app-accent-rgb: 13, 148, 136;
-  --app-accent-soft: rgba(13, 148, 136, 0.1);
+  /* Zeytin yeşili vurgu rengi */
+  --app-accent: #6f7d34;
+  --app-accent-hover: #56612a;
+  --app-accent-rgb: 111, 125, 52;
+  --app-accent-soft: rgba(111, 125, 52, 0.1);
 
   --app-radius-sm: 0.5rem;
   --app-radius: 0.75rem;
   --app-radius-lg: 1rem;
 
-  --app-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.08);
-  --app-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
-  --app-shadow-hover: 0 12px 20px -6px rgba(15, 23, 42, 0.14), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
+  --app-shadow-sm: 0 1px 2px rgba(38, 35, 20, 0.06), 0 1px 3px rgba(38, 35, 20, 0.08);
+  --app-shadow: 0 4px 6px -1px rgba(38, 35, 20, 0.08), 0 2px 4px -2px rgba(38, 35, 20, 0.06);
+  --app-shadow-hover: 0 12px 20px -6px rgba(38, 35, 20, 0.14), 0 4px 6px -4px rgba(38, 35, 20, 0.08);
 
-  --app-navbar-bg: #ffffff;
-  --app-surface-alt: #f1f5f9;
+  --app-navbar-bg: #fffdf7;
+  --app-surface-alt: #f1ede0;
 
-  --bs-body-bg: #f8fafc;
-  --bs-body-color: #0f172a;
-  --bs-emphasis-color: #0f172a;
-  --bs-secondary-color: #64748b;
-  --bs-border-color: #e2e8f0;
-  --bs-border-color-translucent: #e2e8f0;
-  --bs-secondary-bg: #f1f5f9;
-  --bs-tertiary-bg: #f1f5f9;
+  /* Sıcak, doğal nötrler (bej/krem) */
+  --bs-body-bg: #f8f6ee;
+  --bs-body-color: #2b2a22;
+  --bs-emphasis-color: #1f1e17;
+  --bs-secondary-color: #6b6a5c;
+  --bs-border-color: #e3ddc9;
+  --bs-border-color-translucent: #e3ddc9;
+  --bs-secondary-bg: #f1ede0;
+  --bs-tertiary-bg: #f1ede0;
 
-  --bs-card-bg: #ffffff;
-  --bs-card-border-color: #e2e8f0;
+  --bs-card-bg: #fffdf7;
+  --bs-card-border-color: #e3ddc9;
 
   --bs-table-bg: transparent;
-  --bs-table-color: #0f172a;
-  --bs-table-border-color: #e2e8f0;
-  --bs-table-hover-bg: #f1f5f9;
+  --bs-table-color: #2b2a22;
+  --bs-table-border-color: #e3ddc9;
+  --bs-table-hover-bg: #f1ede0;
 
   --bs-link-color: var(--app-accent);
   --bs-link-hover-color: var(--app-accent-hover);
   --bs-link-color-rgb: var(--app-accent-rgb);
   --bs-link-hover-color-rgb: var(--app-accent-rgb);
+
+  /* Hardal sarısı - "Çıkış" ve uyarı vurguları */
+  --bs-warning: #c9a227;
+  --bs-warning-rgb: 201, 162, 39;
+  /* Olgun yeşil - "Giriş" ve başarı vurguları */
+  --bs-success: #5f7d32;
+  --bs-success-rgb: 95, 125, 50;
 }
 
 [data-bs-theme="dark"] {
-  --app-accent: #14b8a6;
-  --app-accent-hover: #2dd4bf;
-  --app-accent-rgb: 20, 184, 166;
-  --app-accent-soft: rgba(20, 184, 166, 0.14);
+  /* Zeytin yeşili vurgu rengi (koyu temada aydınlatılmış) */
+  --app-accent: #a3b565;
+  --app-accent-hover: #b7c67e;
+  --app-accent-rgb: 163, 181, 101;
+  --app-accent-soft: rgba(163, 181, 101, 0.16);
 
   --app-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
   --app-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45), 0 2px 4px -2px rgba(0, 0, 0, 0.35);
   --app-shadow-hover: 0 12px 20px -6px rgba(0, 0, 0, 0.55), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
 
-  --app-navbar-bg: #1e293b;
-  --app-surface-alt: #273449;
+  --app-navbar-bg: #211f16;
+  --app-surface-alt: #282618;
 
-  --bs-body-bg: #0f172a;
-  --bs-body-color: #f1f5f9;
-  --bs-emphasis-color: #f8fafc;
-  --bs-secondary-color: #94a3b8;
-  --bs-border-color: #334155;
-  --bs-border-color-translucent: #334155;
-  --bs-secondary-bg: #1e293b;
-  --bs-tertiary-bg: #1e293b;
+  /* Sıcak, doğal nötrler (koyu toprak tonları) */
+  --bs-body-bg: #1b1a13;
+  --bs-body-color: #efe9d8;
+  --bs-emphasis-color: #faf7ec;
+  --bs-secondary-color: #aca493;
+  --bs-border-color: #3a3726;
+  --bs-border-color-translucent: #3a3726;
+  --bs-secondary-bg: #26241a;
+  --bs-tertiary-bg: #26241a;
 
-  --bs-card-bg: #1e293b;
-  --bs-card-border-color: #334155;
+  --bs-card-bg: #211f16;
+  --bs-card-border-color: #3a3726;
 
   --bs-table-bg: transparent;
-  --bs-table-color: #f1f5f9;
-  --bs-table-border-color: #334155;
-  --bs-table-hover-bg: #273449;
+  --bs-table-color: #efe9d8;
+  --bs-table-border-color: #3a3726;
+  --bs-table-hover-bg: #282618;
 
   --bs-link-color: var(--app-accent);
   --bs-link-hover-color: var(--app-accent-hover);
+
+  /* Hardal sarısı (koyu temada aydınlatılmış) */
+  --bs-warning: #d9b64f;
+  --bs-warning-rgb: 217, 182, 79;
+  /* Olgun yeşil (koyu temada aydınlatılmış) */
+  --bs-success: #7c9c4c;
+  --bs-success-rgb: 124, 156, 76;
 }
 
 /* ==========================================================================
@@ -107,6 +125,7 @@ body {
 }
 
 .app-main {
+  max-width: 1600px;
   padding-top: 1.75rem;
   padding-bottom: 3rem;
 }
@@ -363,6 +382,197 @@ h1, .h1 {
 
 .panel-body {
   padding: 1.25rem;
+}
+
+/* ==========================================================================
+   Home page - hero (logged out)
+   ========================================================================== */
+.hero {
+  text-align: center;
+  padding: 3.5rem 1.5rem 3rem;
+  margin-bottom: 2rem;
+  border-radius: var(--app-radius-lg);
+  background: linear-gradient(135deg, var(--app-accent-soft), transparent 70%), var(--bs-card-bg);
+  border: 1px solid var(--bs-card-border-color);
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+  color: var(--bs-emphasis-color);
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: var(--bs-secondary-color);
+  max-width: 560px;
+  margin: 0 auto 1.75rem;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   Home page - feature cards (logged out)
+   ========================================================================== */
+.feature-card {
+  background-color: var(--bs-card-bg);
+  border: 1px solid var(--bs-card-border-color);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+  padding: 1.5rem;
+  height: 100%;
+}
+
+.feature-card-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--app-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--app-accent-soft);
+  color: var(--app-accent);
+  font-size: 1.25rem;
+  margin-bottom: 0.85rem;
+}
+
+.feature-card-title {
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  color: var(--bs-emphasis-color);
+}
+
+.feature-card-desc {
+  font-size: 0.85rem;
+  color: var(--bs-secondary-color);
+  margin: 0;
+}
+
+/* ==========================================================================
+   Home page - quick access cards (logged in)
+   ========================================================================== */
+.quick-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: var(--bs-card-bg);
+  border: 1px solid var(--bs-card-border-color);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+  padding: 1.5rem;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.quick-card:hover {
+  box-shadow: var(--app-shadow-hover);
+  transform: translateY(-3px);
+  border-color: var(--app-accent);
+  color: inherit;
+}
+
+.quick-card-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--app-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--app-accent-soft);
+  color: var(--app-accent);
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.quick-card-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--bs-emphasis-color);
+  margin-bottom: 0.35rem;
+}
+
+.quick-card-desc {
+  font-size: 0.875rem;
+  color: var(--bs-secondary-color);
+  margin: 0;
+}
+
+/* ==========================================================================
+   Location cards (Dashboard - Bölümlere Göre Stok)
+   ========================================================================== */
+.location-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.location-card {
+  background-color: var(--bs-card-bg);
+  border: 1px solid var(--bs-card-border-color);
+  border-left: 4px solid var(--app-accent);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+  padding: 1rem 1.15rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.location-card:hover {
+  box-shadow: var(--app-shadow);
+}
+
+.location-card.has-critical {
+  border-left-color: #dc2626;
+}
+
+[data-bs-theme="dark"] .location-card.has-critical {
+  border-left-color: #f87171;
+}
+
+.location-card .location-name {
+  font-weight: 600;
+  color: var(--bs-emphasis-color);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.location-card .location-name i {
+  color: var(--app-accent);
+}
+
+.location-card.has-critical .location-name i {
+  color: #dc2626;
+}
+
+[data-bs-theme="dark"] .location-card.has-critical .location-name i {
+  color: #f87171;
+}
+
+.location-card .location-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--bs-secondary-color);
+}
+
+.location-card .location-stats .critical {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+[data-bs-theme="dark"] .location-card .location-stats .critical {
+  color: #f87171;
 }
 
 /* ==========================================================================

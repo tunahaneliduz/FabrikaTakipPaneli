@@ -34,6 +34,7 @@
                 <th>Ad</th>
                 <th>Birim</th>
                 <th>Kategori</th>
+                <th>Konum</th>
                 <th class="text-end">Birim Fiyat</th>
                 <th class="text-end">Mevcut Stok</th>
                 <th></th>
@@ -42,7 +43,7 @@
         <tbody>
             @if (Model.Products.Count == 0)
             {
-                <tr><td colspan="6" class="data-card-empty">Ürün bulunamadı.</td></tr>
+                <tr><td colspan="7" class="data-card-empty">Ürün bulunamadı.</td></tr>
             }
             @foreach (var product in Model.Products)
             {
@@ -50,6 +51,7 @@
                     <td>@product.Name</td>
                     <td>@product.Unit</td>
                     <td>@product.Category</td>
+                    <td>@product.Location</td>
                     <td class="text-end">@product.UnitPrice.ToString("N2")</td>
                     <td class="text-end">@product.CurrentStock.ToString("N2")</td>
                     <td class="text-end">

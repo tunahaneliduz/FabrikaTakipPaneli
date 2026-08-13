@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using FabrikaTakipPaneli.Data;
 using FabrikaTakipPaneli.Models;
@@ -18,14 +19,23 @@ public class CreateModel : PageModel
     [BindProperty]
     public InputModel Input { get; set; } = new();
 
-    public void OnGet()
+    public IList<string> ExistingLocations { get; set; } = new List<string>();
+
+    public async Task OnGetAsync()
     {
+        ExistingLocations = await _context.Products
+            .Where(p => p.Location != null && p.Location != "")
+            .Select(p => p.Location!)
+            .Distinct()
+            .OrderBy(l => l)
+            .ToListAsync();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
+            await OnGetAsync();
             return Page();
         }
 
@@ -35,6 +45,7 @@ public class CreateModel : PageModel
             Unit = Input.Unit,
             Description = Input.Description,
             Category = Input.Category,
+            Location = Input.Location,
             UnitPrice = Input.UnitPrice,
             MinStockLevel = Input.MinStockLevel
         };
@@ -64,6 +75,10 @@ public class CreateModel : PageModel
         [MaxLength(100)]
         [Display(Name = "Kategori")]
         public string? Category { get; set; }
+
+        [MaxLength(150)]
+        [Display(Name = "Konum/Bölüm")]
+        public string? Location { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Birim fiyat negatif olamaz.")]
         [Display(Name = "Birim Fiyat")]

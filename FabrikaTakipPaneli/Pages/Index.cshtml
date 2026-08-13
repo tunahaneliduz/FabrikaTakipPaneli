@@ -1,10 +1,152 @@
-﻿@page
+@page
 @model IndexModel
+@using FabrikaTakipPaneli.Models
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="mb-4">
+        <h1 class="mb-1">Hoş geldiniz</h1>
+        <p class="text-muted mb-0">FabrikaTakipPaneli'ne genel bakış.</p>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-lg-4">
+            <div class="kpi-card kpi-accent">
+                <div class="kpi-icon"><i class="bi bi-box-seam"></i></div>
+                <div>
+                    <div class="kpi-value">@Model.TotalProductCount</div>
+                    <div class="kpi-label">Toplam Ürün</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+            <div class="kpi-card @(Model.CriticalStockProductCount > 0 ? "kpi-danger" : "kpi-neutral")">
+                <div class="kpi-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                <div>
+                    <div class="kpi-value">@Model.CriticalStockProductCount</div>
+                    <div class="kpi-label">Kritik Stoklu Ürün</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+            <div class="kpi-card kpi-info">
+                <div class="kpi-icon"><i class="bi bi-calendar-check"></i></div>
+                <div>
+                    <div class="kpi-value">@Model.TodayEntryCount</div>
+                    <div class="kpi-label">Bugünkü Hareket</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <a asp-page="/Dashboard/Index" class="quick-card">
+                <div class="quick-card-icon"><i class="bi bi-speedometer2"></i></div>
+                <div class="quick-card-title">Dashboard</div>
+                <p class="quick-card-desc">KPI'lar, grafikler ve bölüm bazlı stok özeti.</p>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a asp-page="/Products/Index" class="quick-card">
+                <div class="quick-card-icon"><i class="bi bi-box-seam"></i></div>
+                <div class="quick-card-title">Ürünler</div>
+                <p class="quick-card-desc">Ürün listesi, arama ve stok durumu.</p>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a asp-page="/StockEntries/Index" class="quick-card">
+                <div class="quick-card-icon"><i class="bi bi-arrow-left-right"></i></div>
+                <div class="quick-card-title">Stok Hareketleri</div>
+                <p class="quick-card-desc">Giriş/çıkış kayıtları, filtreleme ve Excel'e aktarma.</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header"><i class="bi bi-clock-history me-1"></i> Son Stok Hareketleri</div>
+        <div class="table-responsive">
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Ürün</th>
+                        <th>Tip</th>
+                        <th class="text-end">Miktar</th>
+                        <th>Tarih</th>
+                        <th>Kullanıcı</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.RecentEntries.Count == 0)
+                    {
+                        <tr><td colspan="5" class="data-card-empty">Hareket bulunamadı.</td></tr>
+                    }
+                    @foreach (var e in Model.RecentEntries)
+                    {
+                        <tr>
+                            <td>@e.ProductName</td>
+                            <td>
+                                @if (e.Type == StockEntryType.In)
+                                {
+                                    <span class="badge text-bg-success">Giriş</span>
+                                }
+                                else
+                                {
+                                    <span class="badge text-bg-warning">Çıkış</span>
+                                }
+                            </td>
+                            <td class="text-end">@e.Quantity.ToString("N2")</td>
+                            <td>@e.EntryDate.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>@e.UserName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="hero">
+        <h1 class="hero-title">FabrikaTakipPaneli</h1>
+        <p class="hero-subtitle">Üretim ve stok süreçlerinizi tek panelden yönetin.</p>
+        <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" asp-area="Identity" asp-page="/Account/Login">Giriş Yap</a>
+            <a class="btn btn-outline-primary btn-lg" asp-area="Identity" asp-page="/Account/Register">Kayıt Ol</a>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-lg-3">
+            <div class="feature-card">
+                <div class="feature-card-icon"><i class="bi bi-search"></i></div>
+                <div class="feature-card-title">Arama &amp; Filtreleme</div>
+                <p class="feature-card-desc">Ürünlerde ve stok hareketlerinde hızlı arama, tarih aralığı filtreleme.</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="feature-card">
+                <div class="feature-card-icon"><i class="bi bi-bar-chart"></i></div>
+                <div class="feature-card-title">Dashboard &amp; Grafikler</div>
+                <p class="feature-card-desc">Kritik stok uyarıları, giriş/çıkış trendleri ve bölüm bazlı özet.</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="feature-card">
+                <div class="feature-card-icon"><i class="bi bi-file-earmark-excel"></i></div>
+                <div class="feature-card-title">Excel'e Aktar</div>
+                <p class="feature-card-desc">Stok hareketlerini tek tıkla Excel dosyasına aktarın.</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="feature-card">
+                <div class="feature-card-icon"><i class="bi bi-people"></i></div>
+                <div class="feature-card-title">Rol Bazlı Yetkilendirme</div>
+                <p class="feature-card-desc">Yönetici ve kullanıcı rolleriyle erişim ve düzenleme yetkisi kontrolü.</p>
+            </div>
+        </div>
+    </div>
+}

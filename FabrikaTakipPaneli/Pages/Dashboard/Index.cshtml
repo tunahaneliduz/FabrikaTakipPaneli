@@ -48,6 +48,39 @@
 </div>
 
 <div class="row g-3 mb-4">
+    <div class="col-12">
+        <div class="panel">
+            <div class="panel-header"><i class="bi bi-geo-alt me-1"></i> Bölümlere Göre Stok</div>
+            <div class="panel-body">
+                <div class="location-grid">
+                    @if (Model.LocationSummaries.Count == 0)
+                    {
+                        <p class="text-muted mb-0">Ürün bulunamadı.</p>
+                    }
+                    @foreach (var loc in Model.LocationSummaries)
+                    {
+                        <div class="location-card @(loc.CriticalCount > 0 ? "has-critical" : "")">
+                            <div class="location-name"><i class="bi bi-geo-alt-fill"></i> @loc.Location</div>
+                            <div class="location-stats">
+                                <span>@loc.ProductCount ürün</span>
+                                @if (loc.CriticalCount > 0)
+                                {
+                                    <span class="critical"><i class="bi bi-exclamation-triangle"></i> @loc.CriticalCount kritik stoklu ürün</span>
+                                }
+                                else
+                                {
+                                    <span>Kritik stok yok</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
     <div class="col-lg-6">
         <div class="panel h-100">
             <div class="panel-header"><i class="bi bi-exclamation-diamond me-1"></i> Kritik Stok - En Düşük Stoklu Ürünler</div>
@@ -164,6 +197,7 @@
         const chartTextColor = rootStyles.getPropertyValue('--bs-secondary-color').trim();
         const chartGridColor = rootStyles.getPropertyValue('--bs-border-color').trim();
         const chartAccent = rootStyles.getPropertyValue('--app-accent').trim();
+        const chartWarning = rootStyles.getPropertyValue('--bs-warning').trim();
 
         Chart.defaults.font.family = "'Inter Variable', 'Inter', sans-serif";
         Chart.defaults.color = chartTextColor;
@@ -205,8 +239,8 @@
                     {
                         label: 'Çıkış',
                         data: trendOutValues,
-                        borderColor: '#f59e0b',
-                        backgroundColor: '#f59e0b',
+                        borderColor: chartWarning,
+                        backgroundColor: chartWarning,
                         tension: 0.3
                     }
                 ]
