@@ -5,47 +5,62 @@
     ViewData["Title"] = "Kullanıcılar";
 }
 
-<h1>Kullanıcılar</h1>
+<h1><i class="bi bi-people"></i> Kullanıcılar</h1>
 
 @if (!string.IsNullOrEmpty(Model.StatusMessage))
 {
-    <div class="alert alert-info">@Model.StatusMessage</div>
+    <div class="alert alert-info"><i class="bi bi-check-circle me-1"></i> @Model.StatusMessage</div>
 }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>E-posta</th>
-            <th>Mevcut Rol</th>
-            <th>Rolü Değiştir</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model.Users)
-        {
+<div class="data-card">
+    <table class="table">
+        <thead>
             <tr>
-                <td>@user.Email</td>
-                <td>@(user.CurrentRole ?? "(rol yok)")</td>
-                <td>
-                    @if (user.IsCurrentUser)
-                    {
-                        <span class="text-muted">Kendi rolünüzü değiştiremezsiniz</span>
-                    }
-                    else
-                    {
-                        <form method="post" asp-page-handler="ChangeRole" class="d-flex gap-2">
-                            <input type="hidden" name="userId" value="@user.Id" />
-                            <select name="role" class="form-select form-select-sm" style="width: auto;">
-                                @foreach (var role in AppRoles.All)
-                                {
-                                    <option value="@role" selected="@(role == user.CurrentRole)">@role</option>
-                                }
-                            </select>
-                            <button type="submit" class="btn btn-sm btn-outline-primary">Kaydet</button>
-                        </form>
-                    }
-                </td>
+                <th>E-posta</th>
+                <th>Mevcut Rol</th>
+                <th>Rolü Değiştir</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @if (Model.Users.Count == 0)
+            {
+                <tr><td colspan="3" class="data-card-empty">Kullanıcı bulunamadı.</td></tr>
+            }
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td><i class="bi bi-person-circle me-1 text-body-secondary"></i> @user.Email</td>
+                    <td>
+                        @if (user.CurrentRole is not null)
+                        {
+                            <span class="badge text-bg-secondary">@user.CurrentRole</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">(rol yok)</span>
+                        }
+                    </td>
+                    <td>
+                        @if (user.IsCurrentUser)
+                        {
+                            <span class="text-muted"><i class="bi bi-lock"></i> Kendi rolünüzü değiştiremezsiniz</span>
+                        }
+                        else
+                        {
+                            <form method="post" asp-page-handler="ChangeRole" class="d-flex gap-2">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <select name="role" class="form-select form-select-sm" style="width: auto;">
+                                    @foreach (var role in AppRoles.All)
+                                    {
+                                        <option value="@role" selected="@(role == user.CurrentRole)">@role</option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-check-lg"></i> Kaydet</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

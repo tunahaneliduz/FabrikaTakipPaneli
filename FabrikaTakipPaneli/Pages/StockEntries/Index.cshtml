@@ -5,25 +5,33 @@
     ViewData["Title"] = "Stok Hareketleri";
 }
 
-<h1>Stok Hareketleri</h1>
-
-<p>
-    <a asp-page="Create" class="btn btn-primary">Yeni Stok Hareketi</a>
-    <a asp-page="Index" asp-page-handler="ExportExcel"
-       asp-route-SearchTerm="@Model.SearchTerm"
-       asp-route-StartDate="@Model.StartDate?.ToString("yyyy-MM-dd")"
-       asp-route-EndDate="@Model.EndDate?.ToString("yyyy-MM-dd")"
-       class="btn btn-success">Excel'e Aktar</a>
-</p>
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h1 class="mb-0">Stok Hareketleri</h1>
+    <div class="d-flex gap-2">
+        <a asp-page="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Yeni Stok Hareketi
+        </a>
+        <a asp-page="Index" asp-page-handler="ExportExcel"
+           asp-route-SearchTerm="@Model.SearchTerm"
+           asp-route-StartDate="@Model.StartDate?.ToString("yyyy-MM-dd")"
+           asp-route-EndDate="@Model.EndDate?.ToString("yyyy-MM-dd")"
+           class="btn btn-success">
+            <i class="bi bi-file-earmark-excel"></i> Excel'e Aktar
+        </a>
+    </div>
+</div>
 
 @if (!User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
 {
-    <p class="text-muted"><small>Kayıtlar sadece oluşturulduğu gün içinde (gece yarısına kadar) düzenlenebilir veya silinebilir. Bu süre geçtikten sonra yalnızca yönetici değişiklik yapabilir.</small></p>
+    <p class="text-muted"><small><i class="bi bi-info-circle"></i> Kayıtlar sadece oluşturulduğu gün içinde (gece yarısına kadar) düzenlenebilir veya silinebilir. Bu süre geçtikten sonra yalnızca yönetici değişiklik yapabilir.</small></p>
 }
 
 <form method="get" class="row row-cols-lg-auto g-2 align-items-center mb-3">
     <div class="col-12">
-        <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Ürün adına göre ara..." />
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Ürün adına göre ara..." />
+        </div>
     </div>
     <div class="col-12">
         <label class="me-1">Başlangıç:</label>
@@ -35,50 +43,64 @@
     </div>
     <div class="col-12">
         <button type="submit" class="btn btn-outline-secondary">Ara</button>
-        <a asp-page="Index" class="btn btn-outline-secondary">Temizle</a>
+        <a asp-page="Index" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i> Temizle</a>
     </div>
 </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Ürün</th>
-            <th>Tip</th>
-            <th>Miktar</th>
-            <th>Birim Fiyat</th>
-            <th>Tarih</th>
-            <th>Kullanıcı</th>
-            <th>Not</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var entry in Model.StockEntries)
-        {
+<div class="data-card">
+    <table class="table">
+        <thead>
             <tr>
-                <td>@entry.ProductName</td>
-                <td>@(entry.Type == StockEntryType.In ? "Giriş" : "Çıkış")</td>
-                <td>@entry.Quantity.ToString("N2")</td>
-                <td>@(entry.UnitPrice?.ToString("N2"))</td>
-                <td>@entry.EntryDate.ToString("g")</td>
-                <td>@entry.UserName</td>
-                <td>@entry.Note</td>
-                <td>
-                    @if (entry.CanModify)
-                    {
-                        <a asp-page="Edit" asp-route-id="@entry.Id">Düzenle</a>
-                        <span>|</span>
-                        <a asp-page="Delete" asp-route-id="@entry.Id">Sil</a>
-                    }
-                    else if (entry.IsOwnEntry)
-                    {
-                        <span class="text-muted" title="Kayıtlar sadece oluşturulduğu gün içinde düzenlenebilir/silinebilir.">Süre doldu</span>
-                    }
-                </td>
+                <th>Ürün</th>
+                <th>Tip</th>
+                <th class="text-end">Miktar</th>
+                <th class="text-end">Birim Fiyat</th>
+                <th>Tarih</th>
+                <th>Kullanıcı</th>
+                <th>Not</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @if (Model.StockEntries.Count == 0)
+            {
+                <tr><td colspan="8" class="data-card-empty">Hareket bulunamadı.</td></tr>
+            }
+            @foreach (var entry in Model.StockEntries)
+            {
+                <tr>
+                    <td>@entry.ProductName</td>
+                    <td>
+                        @if (entry.Type == StockEntryType.In)
+                        {
+                            <span class="badge text-bg-success"><i class="bi bi-arrow-down-left"></i> Giriş</span>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-warning"><i class="bi bi-arrow-up-right"></i> Çıkış</span>
+                        }
+                    </td>
+                    <td class="text-end">@entry.Quantity.ToString("N2")</td>
+                    <td class="text-end">@(entry.UnitPrice?.ToString("N2"))</td>
+                    <td>@entry.EntryDate.ToString("g")</td>
+                    <td>@entry.UserName</td>
+                    <td>@entry.Note</td>
+                    <td class="text-end">
+                        @if (entry.CanModify)
+                        {
+                            <a asp-page="Edit" asp-route-id="@entry.Id" class="btn btn-sm btn-outline-secondary" title="Düzenle"><i class="bi bi-pencil"></i></a>
+                            <a asp-page="Delete" asp-route-id="@entry.Id" class="btn btn-sm btn-outline-danger" title="Sil"><i class="bi bi-trash"></i></a>
+                        }
+                        else if (entry.IsOwnEntry)
+                        {
+                            <span class="text-muted" title="Kayıtlar sadece oluşturulduğu gün içinde düzenlenebilir/silinebilir."><i class="bi bi-lock"></i> Süre doldu</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <partial name="_Pagination" model="@(new FabrikaTakipPaneli.Pages.Shared.PaginationViewModel
 {

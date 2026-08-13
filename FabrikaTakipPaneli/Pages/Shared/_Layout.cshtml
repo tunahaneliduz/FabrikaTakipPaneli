@@ -1,19 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
+    <script>
+        (function () {
+            var stored = localStorage.getItem('theme');
+            var theme = stored === 'dark' || stored === 'light'
+                ? stored
+                : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-bs-theme', theme);
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FabrikaTakipPaneli</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FabrikaTakipPaneli.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm app-navbar mb-4">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">FabrikaTakipPaneli</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <i class="bi bi-diagram-3-fill"></i>
+                    FabrikaTakipPaneli
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,37 +35,50 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link app-nav-link" asp-area="" asp-page="/Index">
+                                <i class="bi bi-house"></i> Home
+                            </a>
                         </li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Dashboard/Index">Dashboard</a>
+                                <a class="nav-link app-nav-link" asp-area="" asp-page="/Dashboard/Index">
+                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Products/Index">Ürünler</a>
+                                <a class="nav-link app-nav-link" asp-area="" asp-page="/Products/Index">
+                                    <i class="bi bi-box-seam"></i> Ürünler
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/StockEntries/Index">Stok Hareketleri</a>
+                                <a class="nav-link app-nav-link" asp-area="" asp-page="/StockEntries/Index">
+                                    <i class="bi bi-arrow-left-right"></i> Stok Hareketleri
+                                </a>
                             </li>
                             @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Users/Index">Kullanıcılar</a>
+                                    <a class="nav-link app-nav-link" asp-area="" asp-page="/Admin/Users/Index">
+                                        <i class="bi bi-people"></i> Kullanıcılar
+                                    </a>
                                 </li>
                             }
                         }
                     </ul>
-                    <partial name="_LoginPartial" />
+                    <div class="d-flex align-items-center gap-2">
+                        <partial name="_LoginPartial" />
+                        <button id="themeToggle" type="button" class="theme-toggle" title="Tema değiştir" aria-label="Tema değiştir">
+                            <i class="bi bi-sun"></i>
+                            <i class="bi bi-moon-stars"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div class="container app-main">
+        <main role="main">
             @RenderBody()
         </main>
     </div>

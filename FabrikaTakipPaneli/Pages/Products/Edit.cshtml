@@ -4,8 +4,10 @@
     ViewData["Title"] = "Ürün Düzenle";
 }
 
-<h1>Ürün Düzenle</h1>
+<h1><i class="bi bi-pencil"></i> Ürün Düzenle</h1>
 
+<div class="panel" style="max-width: 640px;">
+<div class="panel-body">
 <form method="post">
     <input type="hidden" asp-for="Input.Id" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -40,9 +42,11 @@
         <textarea asp-for="Input.Description" class="form-control"></textarea>
         <span asp-validation-for="Input.Description" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Kaydet</button>
     <a asp-page="Index" class="btn btn-secondary">Vazgeç</a>
 </form>
+</div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

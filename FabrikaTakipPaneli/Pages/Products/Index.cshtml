@@ -4,57 +4,66 @@
     ViewData["Title"] = "Ürünler";
 }
 
-<h1>Ürünler</h1>
-
-@if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
-{
-    <p>
-        <a asp-page="Create" class="btn btn-primary">Yeni Ürün</a>
-    </p>
-}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h1 class="mb-0">Ürünler</h1>
+    @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
+    {
+        <a asp-page="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Yeni Ürün
+        </a>
+    }
+</div>
 
 <form method="get" class="row row-cols-lg-auto g-2 align-items-center mb-3">
     <div class="col-12">
-        <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Ürün adına göre ara..." />
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Ürün adına göre ara..." />
+        </div>
     </div>
     <div class="col-12">
         <button type="submit" class="btn btn-outline-secondary">Ara</button>
-        <a asp-page="Index" class="btn btn-outline-secondary">Temizle</a>
+        <a asp-page="Index" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i> Temizle</a>
     </div>
 </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Ad</th>
-            <th>Birim</th>
-            <th>Kategori</th>
-            <th>Birim Fiyat</th>
-            <th>Mevcut Stok</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var product in Model.Products)
-        {
+<div class="data-card">
+    <table class="table">
+        <thead>
             <tr>
-                <td>@product.Name</td>
-                <td>@product.Unit</td>
-                <td>@product.Category</td>
-                <td>@product.UnitPrice.ToString("N2")</td>
-                <td>@product.CurrentStock.ToString("N2")</td>
-                <td>
-                    @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
-                    {
-                        <a asp-page="Edit" asp-route-id="@product.Id">Düzenle</a>
-                        <span>|</span>
-                        <a asp-page="Delete" asp-route-id="@product.Id">Sil</a>
-                    }
-                </td>
+                <th>Ad</th>
+                <th>Birim</th>
+                <th>Kategori</th>
+                <th class="text-end">Birim Fiyat</th>
+                <th class="text-end">Mevcut Stok</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @if (Model.Products.Count == 0)
+            {
+                <tr><td colspan="6" class="data-card-empty">Ürün bulunamadı.</td></tr>
+            }
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Unit</td>
+                    <td>@product.Category</td>
+                    <td class="text-end">@product.UnitPrice.ToString("N2")</td>
+                    <td class="text-end">@product.CurrentStock.ToString("N2")</td>
+                    <td class="text-end">
+                        @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
+                        {
+                            <a asp-page="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-outline-secondary" title="Düzenle"><i class="bi bi-pencil"></i></a>
+                            <a asp-page="Delete" asp-route-id="@product.Id" class="btn btn-sm btn-outline-danger" title="Sil"><i class="bi bi-trash"></i></a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <partial name="_Pagination" model="@(new FabrikaTakipPaneli.Pages.Shared.PaginationViewModel
 {

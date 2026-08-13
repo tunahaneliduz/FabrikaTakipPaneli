@@ -10,34 +10,38 @@
 
 <div class="row g-3 mb-4">
     <div class="col-sm-6 col-lg-3">
-        <div class="card text-bg-primary h-100">
-            <div class="card-body">
-                <div class="fs-2 fw-bold">@Model.TotalProductCount</div>
-                <div>Toplam Ürün Sayısı</div>
+        <div class="kpi-card kpi-accent">
+            <div class="kpi-icon"><i class="bi bi-box-seam"></i></div>
+            <div>
+                <div class="kpi-value">@Model.TotalProductCount</div>
+                <div class="kpi-label">Toplam Ürün Sayısı</div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-lg-3">
-        <div class="card text-bg-secondary h-100">
-            <div class="card-body">
-                <div class="fs-2 fw-bold">@Model.TotalStockEntryCount</div>
-                <div>Toplam Stok Hareketi</div>
+        <div class="kpi-card kpi-neutral">
+            <div class="kpi-icon"><i class="bi bi-arrow-left-right"></i></div>
+            <div>
+                <div class="kpi-value">@Model.TotalStockEntryCount</div>
+                <div class="kpi-label">Toplam Stok Hareketi</div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-lg-3">
-        <div class="card text-bg-info h-100">
-            <div class="card-body">
-                <div class="fs-2 fw-bold">@Model.TodayEntryCount</div>
-                <div>Bugünkü Hareket Sayısı</div>
+        <div class="kpi-card kpi-info">
+            <div class="kpi-icon"><i class="bi bi-calendar-check"></i></div>
+            <div>
+                <div class="kpi-value">@Model.TodayEntryCount</div>
+                <div class="kpi-label">Bugünkü Hareket Sayısı</div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-lg-3">
-        <div class="card text-bg-danger h-100">
-            <div class="card-body">
-                <div class="fs-2 fw-bold">@Model.CriticalStockProductCount</div>
-                <div>Kritik Stoklu Ürün (Min Eşik Altı)</div>
+        <div class="kpi-card kpi-danger">
+            <div class="kpi-icon"><i class="bi bi-exclamation-triangle"></i></div>
+            <div>
+                <div class="kpi-value">@Model.CriticalStockProductCount</div>
+                <div class="kpi-label">Kritik Stoklu Ürün (Min Eşik Altı)</div>
             </div>
         </div>
     </div>
@@ -45,9 +49,9 @@
 
 <div class="row g-3 mb-4">
     <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-header">Kritik Stok - En Düşük Stoklu Ürünler</div>
-            <div class="card-body p-0">
+        <div class="panel h-100">
+            <div class="panel-header"><i class="bi bi-exclamation-diamond me-1"></i> Kritik Stok - En Düşük Stoklu Ürünler</div>
+            <div class="table-responsive">
                 <table class="table table-sm mb-0">
                     <thead>
                         <tr>
@@ -59,7 +63,7 @@
                     <tbody>
                         @if (Model.LowStockProducts.Count == 0)
                         {
-                            <tr><td colspan="3" class="text-muted p-2">Ürün bulunamadı.</td></tr>
+                            <tr><td colspan="3" class="data-card-empty">Ürün bulunamadı.</td></tr>
                         }
                         @foreach (var p in Model.LowStockProducts)
                         {
@@ -84,9 +88,9 @@
         </div>
     </div>
     <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-header">Son Stok Hareketleri</div>
-            <div class="card-body p-0">
+        <div class="panel h-100">
+            <div class="panel-header"><i class="bi bi-clock-history me-1"></i> Son Stok Hareketleri</div>
+            <div class="table-responsive">
                 <table class="table table-sm mb-0">
                     <thead>
                         <tr>
@@ -100,7 +104,7 @@
                     <tbody>
                         @if (Model.RecentEntries.Count == 0)
                         {
-                            <tr><td colspan="5" class="text-muted p-2">Hareket bulunamadı.</td></tr>
+                            <tr><td colspan="5" class="data-card-empty">Hareket bulunamadı.</td></tr>
                         }
                         @foreach (var e in Model.RecentEntries)
                         {
@@ -130,17 +134,17 @@
 
 <div class="row g-3 mb-4">
     <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-header">En Düşük Stoklu Ürünler (Grafik)</div>
-            <div class="card-body">
+        <div class="panel h-100">
+            <div class="panel-header"><i class="bi bi-bar-chart me-1"></i> En Düşük Stoklu Ürünler (Grafik)</div>
+            <div class="panel-body">
                 <canvas id="lowStockChart" height="220"></canvas>
             </div>
         </div>
     </div>
     <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-header">Son @Model.TrendChartLabels.Count Günlük Giriş/Çıkış Trendi</div>
-            <div class="card-body">
+        <div class="panel h-100">
+            <div class="panel-header"><i class="bi bi-graph-up me-1"></i> Son @Model.TrendChartLabels.Count Günlük Giriş/Çıkış Trendi</div>
+            <div class="panel-body">
                 <canvas id="trendChart" height="220"></canvas>
             </div>
         </div>
@@ -156,6 +160,15 @@
         const trendInValues = @Html.Raw(JsonSerializer.Serialize(Model.TrendChartInValues));
         const trendOutValues = @Html.Raw(JsonSerializer.Serialize(Model.TrendChartOutValues));
 
+        const rootStyles = getComputedStyle(document.documentElement);
+        const chartTextColor = rootStyles.getPropertyValue('--bs-secondary-color').trim();
+        const chartGridColor = rootStyles.getPropertyValue('--bs-border-color').trim();
+        const chartAccent = rootStyles.getPropertyValue('--app-accent').trim();
+
+        Chart.defaults.font.family = "'Inter Variable', 'Inter', sans-serif";
+        Chart.defaults.color = chartTextColor;
+        Chart.defaults.borderColor = chartGridColor;
+
         new Chart(document.getElementById('lowStockChart'), {
             type: 'bar',
             data: {
@@ -163,13 +176,17 @@
                 datasets: [{
                     label: 'Mevcut Stok',
                     data: lowStockValues,
-                    backgroundColor: lowStockValues.map(v => v <= 0 ? '#dc3545' : '#0d6efd')
+                    backgroundColor: lowStockValues.map(v => v <= 0 ? '#dc3545' : chartAccent),
+                    borderRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
+                scales: {
+                    y: { beginAtZero: true, grid: { color: chartGridColor } },
+                    x: { grid: { display: false } }
+                }
             }
         });
 
@@ -181,22 +198,25 @@
                     {
                         label: 'Giriş',
                         data: trendInValues,
-                        borderColor: '#198754',
-                        backgroundColor: '#198754',
-                        tension: 0.2
+                        borderColor: chartAccent,
+                        backgroundColor: chartAccent,
+                        tension: 0.3
                     },
                     {
                         label: 'Çıkış',
                         data: trendOutValues,
-                        borderColor: '#fd7e14',
-                        backgroundColor: '#fd7e14',
-                        tension: 0.2
+                        borderColor: '#f59e0b',
+                        backgroundColor: '#f59e0b',
+                        tension: 0.3
                     }
                 ]
             },
             options: {
                 responsive: true,
-                scales: { y: { beginAtZero: true } }
+                scales: {
+                    y: { beginAtZero: true, grid: { color: chartGridColor } },
+                    x: { grid: { display: false } }
+                }
             }
         });
     </script>

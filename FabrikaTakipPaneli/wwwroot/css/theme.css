@@ -1,0 +1,378 @@
+/* ==========================================================================
+   Font: Inter (self-hosted, latin + latin-ext for Turkish characters)
+   ========================================================================== */
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("../lib/inter/inter-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("../lib/inter/inter-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ==========================================================================
+   Design tokens
+   ========================================================================== */
+:root {
+  --bs-font-sans-serif: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --app-accent: #0d9488;
+  --app-accent-hover: #0f766e;
+  --app-accent-rgb: 13, 148, 136;
+  --app-accent-soft: rgba(13, 148, 136, 0.1);
+
+  --app-radius-sm: 0.5rem;
+  --app-radius: 0.75rem;
+  --app-radius-lg: 1rem;
+
+  --app-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.08);
+  --app-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+  --app-shadow-hover: 0 12px 20px -6px rgba(15, 23, 42, 0.14), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
+
+  --app-navbar-bg: #ffffff;
+  --app-surface-alt: #f1f5f9;
+
+  --bs-body-bg: #f8fafc;
+  --bs-body-color: #0f172a;
+  --bs-emphasis-color: #0f172a;
+  --bs-secondary-color: #64748b;
+  --bs-border-color: #e2e8f0;
+  --bs-border-color-translucent: #e2e8f0;
+  --bs-secondary-bg: #f1f5f9;
+  --bs-tertiary-bg: #f1f5f9;
+
+  --bs-card-bg: #ffffff;
+  --bs-card-border-color: #e2e8f0;
+
+  --bs-table-bg: transparent;
+  --bs-table-color: #0f172a;
+  --bs-table-border-color: #e2e8f0;
+  --bs-table-hover-bg: #f1f5f9;
+
+  --bs-link-color: var(--app-accent);
+  --bs-link-hover-color: var(--app-accent-hover);
+  --bs-link-color-rgb: var(--app-accent-rgb);
+  --bs-link-hover-color-rgb: var(--app-accent-rgb);
+}
+
+[data-bs-theme="dark"] {
+  --app-accent: #14b8a6;
+  --app-accent-hover: #2dd4bf;
+  --app-accent-rgb: 20, 184, 166;
+  --app-accent-soft: rgba(20, 184, 166, 0.14);
+
+  --app-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --app-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45), 0 2px 4px -2px rgba(0, 0, 0, 0.35);
+  --app-shadow-hover: 0 12px 20px -6px rgba(0, 0, 0, 0.55), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+
+  --app-navbar-bg: #1e293b;
+  --app-surface-alt: #273449;
+
+  --bs-body-bg: #0f172a;
+  --bs-body-color: #f1f5f9;
+  --bs-emphasis-color: #f8fafc;
+  --bs-secondary-color: #94a3b8;
+  --bs-border-color: #334155;
+  --bs-border-color-translucent: #334155;
+  --bs-secondary-bg: #1e293b;
+  --bs-tertiary-bg: #1e293b;
+
+  --bs-card-bg: #1e293b;
+  --bs-card-border-color: #334155;
+
+  --bs-table-bg: transparent;
+  --bs-table-color: #f1f5f9;
+  --bs-table-border-color: #334155;
+  --bs-table-hover-bg: #273449;
+
+  --bs-link-color: var(--app-accent);
+  --bs-link-hover-color: var(--app-accent-hover);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+body {
+  background-color: var(--bs-body-bg);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.app-main {
+  padding-top: 1.75rem;
+  padding-bottom: 3rem;
+}
+
+h1, .h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+}
+
+/* ==========================================================================
+   Buttons & links (accent)
+   ========================================================================== */
+.btn-primary {
+  --bs-btn-bg: var(--app-accent);
+  --bs-btn-border-color: var(--app-accent);
+  --bs-btn-hover-bg: var(--app-accent-hover);
+  --bs-btn-hover-border-color: var(--app-accent-hover);
+  --bs-btn-active-bg: var(--app-accent-hover);
+  --bs-btn-active-border-color: var(--app-accent-hover);
+  --bs-btn-disabled-bg: var(--app-accent);
+  --bs-btn-disabled-border-color: var(--app-accent);
+  --bs-btn-focus-shadow-rgb: var(--app-accent-rgb);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--app-accent);
+  --bs-btn-border-color: var(--app-accent);
+  --bs-btn-hover-bg: var(--app-accent);
+  --bs-btn-hover-border-color: var(--app-accent);
+  --bs-btn-active-bg: var(--app-accent);
+  --bs-btn-active-border-color: var(--app-accent);
+  --bs-btn-disabled-color: var(--app-accent);
+  --bs-btn-disabled-border-color: var(--app-accent);
+  --bs-btn-focus-shadow-rgb: var(--app-accent-rgb);
+}
+
+.btn {
+  border-radius: var(--app-radius-sm);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
+.app-navbar {
+  background-color: var(--app-navbar-bg);
+  border-bottom: 1px solid var(--bs-border-color);
+  box-shadow: var(--app-shadow-sm);
+}
+
+.app-navbar .navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--bs-emphasis-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-navbar .navbar-brand i {
+  color: var(--app-accent);
+}
+
+.app-nav-link {
+  color: var(--bs-secondary-color) !important;
+  font-weight: 500;
+  border-radius: var(--app-radius-sm);
+  padding: 0.5rem 0.75rem !important;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.app-nav-link:hover {
+  color: var(--bs-emphasis-color) !important;
+  background-color: var(--app-surface-alt);
+}
+
+.app-nav-link.active {
+  color: var(--app-accent) !important;
+  background-color: var(--app-accent-soft);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  border: 1px solid var(--bs-border-color);
+  background-color: transparent;
+  color: var(--bs-secondary-color);
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.theme-toggle:hover {
+  background-color: var(--app-surface-alt);
+  color: var(--bs-emphasis-color);
+}
+
+.theme-toggle .bi-moon-stars {
+  display: none;
+}
+
+[data-bs-theme="dark"] .theme-toggle .bi-sun {
+  display: none;
+}
+
+[data-bs-theme="dark"] .theme-toggle .bi-moon-stars {
+  display: inline-block;
+}
+
+/* ==========================================================================
+   Cards
+   ========================================================================== */
+.card {
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+}
+
+/* ==========================================================================
+   "Card table" — table wrapped in a shadowed, rounded surface
+   ========================================================================== */
+.data-card {
+  background-color: var(--bs-card-bg);
+  border: 1px solid var(--bs-card-border-color);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+  margin-bottom: 1.5rem;
+}
+
+.data-card:hover {
+  box-shadow: var(--app-shadow);
+}
+
+.data-card .table {
+  margin-bottom: 0;
+  --bs-table-bg: transparent;
+}
+
+.data-card .table thead th {
+  background-color: var(--app-surface-alt);
+  color: var(--bs-secondary-color);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  border-bottom: 1px solid var(--bs-border-color);
+  padding: 0.85rem 1rem;
+  white-space: nowrap;
+}
+
+.data-card .table tbody td {
+  padding: 0.85rem 1rem;
+  vertical-align: middle;
+  border-bottom-color: var(--bs-border-color);
+}
+
+.data-card .table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-card .table tbody tr {
+  transition: background-color 0.12s ease;
+}
+
+.data-card .table tbody tr:hover {
+  background-color: var(--app-surface-alt);
+}
+
+.data-card-empty {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--bs-secondary-color);
+}
+
+/* ==========================================================================
+   KPI cards (Dashboard)
+   ========================================================================== */
+.kpi-card {
+  background-color: var(--bs-card-bg);
+  border: 1px solid var(--bs-card-border-color);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+  padding: 1.25rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.kpi-card:hover {
+  box-shadow: var(--app-shadow);
+  transform: translateY(-2px);
+}
+
+.kpi-card .kpi-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--app-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.kpi-card .kpi-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--bs-emphasis-color);
+}
+
+.kpi-card .kpi-label {
+  color: var(--bs-secondary-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.kpi-card.kpi-accent .kpi-icon { background-color: var(--app-accent-soft); color: var(--app-accent); }
+.kpi-card.kpi-info .kpi-icon { background-color: rgba(56, 189, 248, 0.14); color: #0284c7; }
+[data-bs-theme="dark"] .kpi-card.kpi-info .kpi-icon { color: #38bdf8; }
+.kpi-card.kpi-neutral .kpi-icon { background-color: var(--app-surface-alt); color: var(--bs-secondary-color); }
+.kpi-card.kpi-danger .kpi-icon { background-color: rgba(220, 38, 38, 0.12); color: #dc2626; }
+[data-bs-theme="dark"] .kpi-card.kpi-danger .kpi-icon { color: #f87171; }
+
+/* ==========================================================================
+   Panels (dashboard sections, forms)
+   ========================================================================== */
+.panel {
+  background-color: var(--bs-card-bg);
+  border: 1px solid var(--bs-card-border-color);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.panel-header {
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid var(--bs-border-color);
+  font-weight: 600;
+  color: var(--bs-emphasis-color);
+  background-color: var(--app-surface-alt);
+}
+
+.panel-body {
+  padding: 1.25rem;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+.form-control, .form-select {
+  border-radius: var(--app-radius-sm);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--app-accent);
+  box-shadow: 0 0 0 0.2rem var(--app-accent-soft);
+}

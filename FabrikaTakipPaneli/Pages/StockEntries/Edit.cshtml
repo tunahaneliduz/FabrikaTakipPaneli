@@ -4,13 +4,15 @@
     ViewData["Title"] = "Stok Hareketi Düzenle";
 }
 
-<h1>Stok Hareketi Düzenle</h1>
+<h1><i class="bi bi-pencil"></i> Stok Hareketi Düzenle</h1>
 
 @if (!User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
 {
-    <p class="text-muted"><small>Kayıtlar sadece oluşturulduğu gün içinde düzenlenebilir.</small></p>
+    <p class="text-muted"><small><i class="bi bi-info-circle"></i> Kayıtlar sadece oluşturulduğu gün içinde düzenlenebilir.</small></p>
 }
 
+<div class="panel" style="max-width: 640px;">
+<div class="panel-body">
 <form method="post">
     <input type="hidden" asp-for="Input.Id" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -44,9 +46,11 @@
         <textarea asp-for="Input.Note" class="form-control"></textarea>
         <span asp-validation-for="Input.Note" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Kaydet</button>
     <a asp-page="Index" class="btn btn-secondary">Vazgeç</a>
 </form>
+</div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
