@@ -35,6 +35,8 @@
   --app-radius: 0.75rem;
   --app-radius-lg: 1rem;
 
+  --app-dot-color: rgba(38, 35, 20, 0.045);
+
   --app-shadow-sm: 0 1px 2px rgba(38, 35, 20, 0.06), 0 1px 3px rgba(38, 35, 20, 0.08);
   --app-shadow: 0 4px 6px -1px rgba(38, 35, 20, 0.08), 0 2px 4px -2px rgba(38, 35, 20, 0.06);
   --app-shadow-hover: 0 12px 20px -6px rgba(38, 35, 20, 0.14), 0 4px 6px -4px rgba(38, 35, 20, 0.08);
@@ -83,6 +85,8 @@
   --app-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
   --app-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45), 0 2px 4px -2px rgba(0, 0, 0, 0.35);
   --app-shadow-hover: 0 12px 20px -6px rgba(0, 0, 0, 0.55), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+
+  --app-dot-color: rgba(239, 233, 216, 0.05);
 
   --app-navbar-bg: #211f16;
   --app-surface-alt: #282618;
@@ -392,7 +396,10 @@ h1, .h1 {
   padding: 3.5rem 1.5rem 3rem;
   margin-bottom: 2rem;
   border-radius: var(--app-radius-lg);
-  background: linear-gradient(135deg, var(--app-accent-soft), transparent 70%), var(--bs-card-bg);
+  background:
+    radial-gradient(var(--app-dot-color) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(135deg, var(--app-accent-soft), rgba(var(--app-accent-rgb), 0.16)),
+    var(--bs-card-bg);
   border: 1px solid var(--bs-card-border-color);
 }
 
@@ -428,6 +435,13 @@ h1, .h1 {
   box-shadow: var(--app-shadow-sm);
   padding: 1.5rem;
   height: 100%;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.feature-card:hover {
+  box-shadow: var(--app-shadow-hover);
+  transform: translateY(-3px);
+  border-color: var(--app-accent);
 }
 
 .feature-card-icon {
@@ -453,6 +467,83 @@ h1, .h1 {
   font-size: 0.85rem;
   color: var(--bs-secondary-color);
   margin: 0;
+}
+
+/* ==========================================================================
+   Home page - "how it works" steps (logged out)
+   ========================================================================== */
+.how-it-works {
+  padding: 2.5rem 1rem;
+  margin-bottom: 2rem;
+}
+
+.how-title {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--bs-emphasis-color);
+  margin-bottom: 2rem;
+}
+
+.how-steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.how-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 15rem;
+}
+
+.how-step-number {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--app-accent);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.how-step-title {
+  font-weight: 700;
+  color: var(--bs-emphasis-color);
+  margin-bottom: 0.25rem;
+}
+
+.how-step-desc {
+  font-size: 0.85rem;
+  color: var(--bs-secondary-color);
+  margin: 0;
+}
+
+.how-step-arrow {
+  flex-shrink: 0;
+  color: var(--bs-border-color);
+  font-size: 1.5rem;
+  margin-top: 0.6rem;
+}
+
+@media (max-width: 767.98px) {
+  .how-steps {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .how-step-arrow {
+    transform: rotate(90deg);
+    margin: 0.25rem 0;
+  }
 }
 
 /* ==========================================================================
