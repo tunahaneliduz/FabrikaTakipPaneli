@@ -52,8 +52,8 @@
                     <td>@product.Unit</td>
                     <td>@product.Category</td>
                     <td>@product.Location</td>
-                    <td class="text-end">@product.UnitPrice.ToString("N2")</td>
-                    <td class="text-end">@product.CurrentStock.ToString("N2")</td>
+                    <td class="text-end font-mono">@product.UnitPrice.ToString("N2")</td>
+                    <td class="text-end font-mono">@product.CurrentStock.ToString("N2")</td>
                     <td class="text-end">
                         @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
                         {

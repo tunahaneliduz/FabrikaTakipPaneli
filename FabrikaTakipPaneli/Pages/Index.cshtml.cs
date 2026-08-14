@@ -19,6 +19,7 @@ public class IndexModel : PageModel
     public int TotalProductCount { get; set; }
     public int CriticalStockProductCount { get; set; }
     public int TodayEntryCount { get; set; }
+    public DateTime? LastUpdateAt { get; set; }
 
     public IList<RecentEntryItem> RecentEntries { get; set; } = new List<RecentEntryItem>();
 
@@ -33,6 +34,11 @@ public class IndexModel : PageModel
 
         TotalProductCount = await _context.Products.CountAsync();
         TodayEntryCount = await _context.StockEntries.CountAsync(s => s.EntryDate >= today && s.EntryDate < today.AddDays(1));
+
+        LastUpdateAt = await _context.StockEntries
+            .OrderByDescending(s => s.CreatedAt)
+            .Select(s => (DateTime?)s.CreatedAt)
+            .FirstOrDefaultAsync();
 
         CriticalStockProductCount = await _context.Products
             .Select(p => new

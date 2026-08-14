@@ -31,15 +31,16 @@
   --app-accent-rgb: 111, 125, 52;
   --app-accent-soft: rgba(111, 125, 52, 0.1);
 
-  --app-radius-sm: 0.5rem;
-  --app-radius: 0.75rem;
-  --app-radius-lg: 1rem;
+  --app-radius-sm: 0.25rem;
+  --app-radius: 0.375rem;
+  --app-radius-lg: 0.5rem;
 
-  --app-dot-color: rgba(38, 35, 20, 0.045);
+  --app-grid-line: rgba(38, 35, 20, 0.05);
+  --app-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
 
   --app-shadow-sm: 0 1px 2px rgba(38, 35, 20, 0.06), 0 1px 3px rgba(38, 35, 20, 0.08);
   --app-shadow: 0 4px 6px -1px rgba(38, 35, 20, 0.08), 0 2px 4px -2px rgba(38, 35, 20, 0.06);
-  --app-shadow-hover: 0 12px 20px -6px rgba(38, 35, 20, 0.14), 0 4px 6px -4px rgba(38, 35, 20, 0.08);
+  --app-shadow-hover: 0 4px 10px -4px rgba(38, 35, 20, 0.16), 0 2px 4px -2px rgba(38, 35, 20, 0.1);
 
   --app-navbar-bg: #fffdf7;
   --app-surface-alt: #f1ede0;
@@ -84,9 +85,9 @@
 
   --app-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
   --app-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45), 0 2px 4px -2px rgba(0, 0, 0, 0.35);
-  --app-shadow-hover: 0 12px 20px -6px rgba(0, 0, 0, 0.55), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --app-shadow-hover: 0 4px 10px -4px rgba(0, 0, 0, 0.6), 0 2px 4px -2px rgba(0, 0, 0, 0.45);
 
-  --app-dot-color: rgba(239, 233, 216, 0.05);
+  --app-grid-line: rgba(239, 233, 216, 0.06);
 
   --app-navbar-bg: #211f16;
   --app-surface-alt: #282618;
@@ -125,6 +126,10 @@
    ========================================================================== */
 body {
   background-color: var(--bs-body-bg);
+  background-image:
+    linear-gradient(var(--app-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--app-grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
@@ -135,9 +140,30 @@ body {
 }
 
 h1, .h1 {
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.02em;
   margin-bottom: 1.25rem;
+}
+
+h2, .h2, h3, .h3 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Sayısal veriler için sabit genişlikli (tabular) rakamlar */
+.font-mono {
+  font-family: var(--app-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Klavye ile gezinirken görünür odak halkası (mouse tıklamalarında görünmez) */
+a:focus-visible,
+button:focus-visible,
+.app-nav-link:focus-visible,
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--app-accent);
+  outline-offset: 2px;
+  border-radius: var(--app-radius-sm);
 }
 
 /* ==========================================================================
@@ -176,13 +202,15 @@ h1, .h1 {
    Navbar
    ========================================================================== */
 .app-navbar {
+  --bs-navbar-padding-y: 0.5rem;
   background-color: var(--app-navbar-bg);
   border-bottom: 1px solid var(--bs-border-color);
   box-shadow: var(--app-shadow-sm);
 }
 
 .app-navbar .navbar-brand {
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 1.05rem;
   letter-spacing: -0.01em;
   color: var(--bs-emphasis-color);
   display: flex;
@@ -197,8 +225,9 @@ h1, .h1 {
 .app-nav-link {
   color: var(--bs-secondary-color) !important;
   font-weight: 500;
+  font-size: 0.9rem;
   border-radius: var(--app-radius-sm);
-  padding: 0.5rem 0.75rem !important;
+  padding: 0.4rem 0.7rem !important;
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -246,6 +275,56 @@ h1, .h1 {
   display: inline-block;
 }
 
+/* Kullanıcı profil menüsü */
+.profile-toggle {
+  color: var(--bs-secondary-color) !important;
+  font-weight: 500;
+  font-size: 0.9rem;
+  border-radius: var(--app-radius-sm);
+  padding: 0.4rem 0.7rem !important;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.profile-toggle:hover,
+.profile-toggle:focus {
+  color: var(--bs-emphasis-color) !important;
+  background-color: var(--app-surface-alt);
+}
+
+.profile-toggle::after {
+  margin-left: 0.15rem;
+}
+
+.dropdown-menu {
+  --bs-dropdown-bg: var(--bs-card-bg);
+  --bs-dropdown-border-color: var(--bs-card-border-color);
+  --bs-dropdown-link-color: var(--bs-body-color);
+  --bs-dropdown-link-hover-bg: var(--app-surface-alt);
+  --bs-dropdown-link-hover-color: var(--bs-emphasis-color);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow);
+  padding: 0.35rem;
+}
+
+.dropdown-menu .dropdown-item {
+  border-radius: var(--app-radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.dropdown-menu .dropdown-item i {
+  color: var(--app-accent);
+  width: 1.1rem;
+  text-align: center;
+}
+
 /* ==========================================================================
    Cards
    ========================================================================== */
@@ -271,12 +350,14 @@ h1, .h1 {
   box-shadow: var(--app-shadow);
 }
 
-.data-card .table {
+.data-card .table,
+.panel .table {
   margin-bottom: 0;
   --bs-table-bg: transparent;
 }
 
-.data-card .table thead th {
+.data-card .table thead th,
+.panel .table thead th {
   background-color: var(--app-surface-alt);
   color: var(--bs-secondary-color);
   font-size: 0.8rem;
@@ -288,21 +369,25 @@ h1, .h1 {
   white-space: nowrap;
 }
 
-.data-card .table tbody td {
+.data-card .table tbody td,
+.panel .table tbody td {
   padding: 0.85rem 1rem;
   vertical-align: middle;
   border-bottom-color: var(--bs-border-color);
 }
 
-.data-card .table tbody tr:last-child td {
+.data-card .table tbody tr:last-child td,
+.panel .table tbody tr:last-child td {
   border-bottom: none;
 }
 
-.data-card .table tbody tr {
+.data-card .table tbody tr,
+.panel .table tbody tr {
   transition: background-color 0.12s ease;
 }
 
-.data-card .table tbody tr:hover {
+.data-card .table tbody tr:hover,
+.panel .table tbody tr:hover {
   background-color: var(--app-surface-alt);
 }
 
@@ -325,12 +410,21 @@ h1, .h1 {
   align-items: center;
   gap: 1rem;
   height: 100%;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
 
 .kpi-card:hover {
   box-shadow: var(--app-shadow);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+  border-color: var(--app-accent);
+  color: inherit;
+}
+
+.kpi-card:focus-visible {
+  outline: 2px solid var(--app-accent);
+  outline-offset: 2px;
 }
 
 .kpi-card .kpi-icon {
@@ -357,6 +451,20 @@ h1, .h1 {
   font-weight: 500;
 }
 
+.kpi-card .kpi-arrow {
+  margin-left: auto;
+  color: var(--bs-secondary-color);
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.kpi-card:hover .kpi-arrow,
+.kpi-card:focus-visible .kpi-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 .kpi-card.kpi-accent .kpi-icon { background-color: var(--app-accent-soft); color: var(--app-accent); }
 .kpi-card.kpi-info .kpi-icon { background-color: rgba(56, 189, 248, 0.14); color: #0284c7; }
 [data-bs-theme="dark"] .kpi-card.kpi-info .kpi-icon { color: #38bdf8; }
@@ -377,11 +485,18 @@ h1, .h1 {
 }
 
 .panel-header {
-  padding: 0.9rem 1.25rem;
+  padding: 0.75rem 1.1rem;
   border-bottom: 1px solid var(--bs-border-color);
-  font-weight: 600;
-  color: var(--bs-emphasis-color);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--bs-secondary-color);
   background-color: var(--app-surface-alt);
+}
+
+.panel-header i {
+  color: var(--app-accent);
 }
 
 .panel-body {
@@ -393,14 +508,12 @@ h1, .h1 {
    ========================================================================== */
 .hero {
   text-align: center;
-  padding: 3.5rem 1.5rem 3rem;
+  padding: 3rem 1.5rem 2.75rem;
   margin-bottom: 2rem;
   border-radius: var(--app-radius-lg);
-  background:
-    radial-gradient(var(--app-dot-color) 1px, transparent 1px) 0 0 / 22px 22px,
-    linear-gradient(135deg, var(--app-accent-soft), rgba(var(--app-accent-rgb), 0.16)),
-    var(--bs-card-bg);
+  background-color: var(--bs-card-bg);
   border: 1px solid var(--bs-card-border-color);
+  border-top: 3px solid var(--app-accent);
 }
 
 .hero-title {
@@ -440,7 +553,7 @@ h1, .h1 {
 
 .feature-card:hover {
   box-shadow: var(--app-shadow-hover);
-  transform: translateY(-3px);
+  transform: translateY(-1px);
   border-color: var(--app-accent);
 }
 
@@ -547,54 +660,77 @@ h1, .h1 {
 }
 
 /* ==========================================================================
-   Home page - quick access cards (logged in)
+   Home page - welcome bar (logged in)
    ========================================================================== */
-.quick-card {
+.welcome-bar {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-bottom: 0.9rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.welcome-bar h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0;
+}
+
+.welcome-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  font-size: 0.85rem;
+  color: var(--bs-secondary-color);
+}
+
+.welcome-meta i {
+  color: var(--app-accent);
+  margin-right: 0.3rem;
+}
+
+/* ==========================================================================
+   Home page - quick actions (logged in)
+   ========================================================================== */
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+
+.quick-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
   background-color: var(--bs-card-bg);
   border: 1px solid var(--bs-card-border-color);
   border-radius: var(--app-radius);
-  box-shadow: var(--app-shadow-sm);
-  padding: 1.5rem;
-  height: 100%;
-  text-decoration: none;
-  color: inherit;
-  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
-}
-
-.quick-card:hover {
-  box-shadow: var(--app-shadow-hover);
-  transform: translateY(-3px);
-  border-color: var(--app-accent);
-  color: inherit;
-}
-
-.quick-card-icon {
-  width: 3rem;
-  height: 3rem;
-  border-radius: var(--app-radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--app-accent-soft);
-  color: var(--app-accent);
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
-}
-
-.quick-card-title {
-  font-weight: 700;
-  font-size: 1.1rem;
   color: var(--bs-emphasis-color);
-  margin-bottom: 0.35rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
-.quick-card-desc {
-  font-size: 0.875rem;
-  color: var(--bs-secondary-color);
-  margin: 0;
+.quick-action i {
+  color: var(--app-accent);
+  font-size: 1.05rem;
+}
+
+.quick-action:hover,
+.quick-action:focus-visible {
+  border-color: var(--app-accent);
+  background-color: var(--app-accent-soft);
+  color: var(--bs-emphasis-color);
+}
+
+.quick-action:focus-visible {
+  outline: 2px solid var(--app-accent);
+  outline-offset: 2px;
 }
 
 /* ==========================================================================

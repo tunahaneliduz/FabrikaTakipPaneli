@@ -13,7 +13,7 @@
         <div class="kpi-card kpi-accent">
             <div class="kpi-icon"><i class="bi bi-box-seam"></i></div>
             <div>
-                <div class="kpi-value">@Model.TotalProductCount</div>
+                <div class="kpi-value font-mono">@Model.TotalProductCount</div>
                 <div class="kpi-label">Toplam Ürün Sayısı</div>
             </div>
         </div>
@@ -22,7 +22,7 @@
         <div class="kpi-card kpi-neutral">
             <div class="kpi-icon"><i class="bi bi-arrow-left-right"></i></div>
             <div>
-                <div class="kpi-value">@Model.TotalStockEntryCount</div>
+                <div class="kpi-value font-mono">@Model.TotalStockEntryCount</div>
                 <div class="kpi-label">Toplam Stok Hareketi</div>
             </div>
         </div>
@@ -31,7 +31,7 @@
         <div class="kpi-card kpi-info">
             <div class="kpi-icon"><i class="bi bi-calendar-check"></i></div>
             <div>
-                <div class="kpi-value">@Model.TodayEntryCount</div>
+                <div class="kpi-value font-mono">@Model.TodayEntryCount</div>
                 <div class="kpi-label">Bugünkü Hareket Sayısı</div>
             </div>
         </div>
@@ -40,7 +40,7 @@
         <div class="kpi-card kpi-danger">
             <div class="kpi-icon"><i class="bi bi-exclamation-triangle"></i></div>
             <div>
-                <div class="kpi-value">@Model.CriticalStockProductCount</div>
+                <div class="kpi-value font-mono">@Model.CriticalStockProductCount</div>
                 <div class="kpi-label">Kritik Stoklu Ürün (Min Eşik Altı)</div>
             </div>
         </div>
@@ -103,7 +103,7 @@
                             <tr>
                                 <td>@p.Name</td>
                                 <td>@p.Unit</td>
-                                <td class="text-end">
+                                <td class="text-end font-mono">
                                     @if (p.IsCritical)
                                     {
                                         <span class="badge text-bg-danger">@p.CurrentStock.ToString("N2")</span>
@@ -153,8 +153,8 @@
                                         <span class="badge text-bg-warning">Çıkış</span>
                                     }
                                 </td>
-                                <td class="text-end">@e.Quantity.ToString("N2")</td>
-                                <td>@e.EntryDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td class="text-end font-mono">@e.Quantity.ToString("N2")</td>
+                                <td class="font-mono">@e.EntryDate.ToString("dd.MM.yyyy HH:mm")</td>
                                 <td>@e.UserName</td>
                             </tr>
                         }

@@ -80,9 +80,9 @@
                             <span class="badge text-bg-warning"><i class="bi bi-arrow-up-right"></i> Çıkış</span>
                         }
                     </td>
-                    <td class="text-end">@entry.Quantity.ToString("N2")</td>
-                    <td class="text-end">@(entry.UnitPrice?.ToString("N2"))</td>
-                    <td>@entry.EntryDate.ToString("g")</td>
+                    <td class="text-end font-mono">@entry.Quantity.ToString("N2")</td>
+                    <td class="text-end font-mono">@(entry.UnitPrice?.ToString("N2"))</td>
+                    <td class="font-mono">@entry.EntryDate.ToString("g")</td>
                     <td>@entry.UserName</td>
                     <td>@entry.Note</td>
                     <td class="text-end">
