@@ -4,7 +4,7 @@ Bir fabrika/üretim tesisinin ürün ve stok hareketlerini takip etmek için gel
 
 ## Ekran Görüntüsü
 
-> _Buraya uygulamanın ekran görüntüsü eklenecek._
+![Dashboard](docs/dashboard.png)
 
 ## 🧱 Kullanılan Teknolojiler
 
