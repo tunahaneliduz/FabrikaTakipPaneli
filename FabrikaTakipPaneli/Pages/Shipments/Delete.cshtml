@@ -1,0 +1,28 @@
+@page "{id:int}"
+@model FabrikaTakipPaneli.Pages.Shipments.DeleteModel
+@{
+    ViewData["Title"] = "Sevkiyat Sil";
+}
+
+<h1><i class="bi bi-trash"></i> Sevkiyat Sil</h1>
+
+<h3>Bu sevkiyatı silmek istediğinize emin misiniz?</h3>
+
+<div class="panel" style="max-width: 720px;">
+<div class="panel-body">
+    <dl class="row">
+        <dt class="col-sm-3">Seri No</dt>
+        <dd class="col-sm-9">@Model.OrderNumber</dd>
+        <dt class="col-sm-3">Ürün</dt>
+        <dd class="col-sm-9">@Model.ProductName</dd>
+        <dt class="col-sm-3">Varış Yeri</dt>
+        <dd class="col-sm-9">@Model.Destination</dd>
+    </dl>
+
+    <form method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Sil</button>
+        <a asp-page="Index" class="btn btn-secondary">Vazgeç</a>
+    </form>
+</div>
+</div>

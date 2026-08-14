@@ -67,6 +67,19 @@ public class EditModel : PageModel
             return Forbid();
         }
 
+        if (Input.Type == StockEntryType.Out && Input.ProductId > 0)
+        {
+            var currentStock = await _context.StockEntries
+                .Where(s => s.ProductId == Input.ProductId && s.Id != Input.Id)
+                .SumAsync(s => s.Type == StockEntryType.In ? s.Quantity : -s.Quantity);
+
+            if (Input.Quantity > currentStock)
+            {
+                ModelState.AddModelError("Input.Quantity",
+                    $"Yetersiz stok, mevcut: {currentStock:N2}, girilmeye çalışılan: {Input.Quantity:N2}");
+            }
+        }
+
         if (!ModelState.IsValid)
         {
             await LoadProductOptionsAsync();

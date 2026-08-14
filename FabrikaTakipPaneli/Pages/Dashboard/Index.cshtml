@@ -197,7 +197,7 @@
         const chartTextColor = rootStyles.getPropertyValue('--bs-secondary-color').trim();
         const chartGridColor = rootStyles.getPropertyValue('--bs-border-color').trim();
         const chartAccent = rootStyles.getPropertyValue('--app-accent').trim();
-        const chartWarning = rootStyles.getPropertyValue('--bs-warning').trim();
+        const chartDanger = rootStyles.getPropertyValue('--bs-danger').trim();
 
         Chart.defaults.font.family = "'Inter Variable', 'Inter', sans-serif";
         Chart.defaults.color = chartTextColor;
@@ -239,8 +239,8 @@
                     {
                         label: 'Çıkış',
                         data: trendOutValues,
-                        borderColor: chartWarning,
-                        backgroundColor: chartWarning,
+                        borderColor: chartDanger,
+                        backgroundColor: chartDanger,
                         tension: 0.3
                     }
                 ]

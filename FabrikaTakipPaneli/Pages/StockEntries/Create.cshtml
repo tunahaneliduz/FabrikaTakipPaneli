@@ -42,6 +42,55 @@
         <textarea asp-for="Input.Note" class="form-control"></textarea>
         <span asp-validation-for="Input.Note" class="text-danger"></span>
     </div>
+
+    <div id="shipmentToggle" class="form-check mb-2" style="display:none;">
+        <input asp-for="Input.AddShipment" class="form-check-input" id="shipmentToggleCheckbox" />
+        <label asp-for="Input.AddShipment" class="form-check-label"></label>
+    </div>
+
+    <div id="shipmentSection" class="border rounded p-3 mb-3" style="display:none;">
+        <h5 class="mb-3"><i class="bi bi-truck"></i> Sevkiyat Bilgisi</h5>
+        <div class="form-group mb-2">
+            <label asp-for="Input.Destination" class="control-label"></label>
+            <input asp-for="Input.Destination" class="form-control" />
+            <span asp-validation-for="Input.Destination" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-2">
+            <label asp-for="Input.TruckPlate" class="control-label"></label>
+            <input asp-for="Input.TruckPlate" class="form-control" />
+        </div>
+        <div class="form-group mb-2">
+            <label asp-for="Input.TruckCapacity" class="control-label"></label>
+            <input asp-for="Input.TruckCapacity" class="form-control" />
+        </div>
+        <div class="form-check mb-2">
+            <input asp-for="Input.IsFullLoad" class="form-check-input" />
+            <label asp-for="Input.IsFullLoad" class="form-check-label"></label>
+        </div>
+        <div class="form-group mb-2">
+            <label asp-for="Input.DriverName" class="control-label"></label>
+            <input asp-for="Input.DriverName" class="form-control" />
+        </div>
+        <div class="form-group mb-2">
+            <label asp-for="Input.DriverPhone" class="control-label"></label>
+            <input asp-for="Input.DriverPhone" class="form-control" />
+        </div>
+        <div class="form-group mb-2">
+            <label asp-for="Input.DepartureTime" class="control-label"></label>
+            <input asp-for="Input.DepartureTime" class="form-control" />
+            <span asp-validation-for="Input.DepartureTime" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-2">
+            <label asp-for="Input.EstimatedTravelHours" class="control-label"></label>
+            <input asp-for="Input.EstimatedTravelHours" class="form-control" />
+            <span asp-validation-for="Input.EstimatedTravelHours" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-2">
+            <label asp-for="Input.CertificateInfo" class="control-label"></label>
+            <textarea asp-for="Input.CertificateInfo" class="form-control"></textarea>
+        </div>
+    </div>
+
     <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Kaydet</button>
     <a asp-page="Index" class="btn btn-secondary">Vazgeç</a>
 </form>
@@ -50,4 +99,26 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            var typeSelect = document.getElementById('Input_Type');
+            var shipmentToggle = document.getElementById('shipmentToggle');
+            var shipmentToggleCheckbox = document.getElementById('shipmentToggleCheckbox');
+            var shipmentSection = document.getElementById('shipmentSection');
+
+            function updateVisibility() {
+                var outSelected = typeSelect.value === '1';
+                shipmentToggle.style.display = outSelected ? '' : 'none';
+                shipmentSection.style.display = (outSelected && shipmentToggleCheckbox.checked) ? '' : 'none';
+
+                if (!outSelected) {
+                    shipmentToggleCheckbox.checked = false;
+                }
+            }
+
+            typeSelect.addEventListener('change', updateVisibility);
+            shipmentToggleCheckbox.addEventListener('change', updateVisibility);
+            updateVisibility();
+        })();
+    </script>
 }

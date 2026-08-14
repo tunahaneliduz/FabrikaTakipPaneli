@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using FabrikaTakipPaneli.Authorization;
 using FabrikaTakipPaneli.Data;
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -32,6 +34,9 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AuthorizePage("/Products/Delete", AppPolicies.ManageProducts);
 
     options.Conventions.AuthorizeFolder("/StockEntries", AppPolicies.EnterStock);
+
+    options.Conventions.AuthorizeFolder("/Shipments", AppPolicies.EnterStock);
+    options.Conventions.AuthorizePage("/Shipments/Delete", AppPolicies.AdminOnly);
 
     options.Conventions.AuthorizeFolder("/Dashboard", AppPolicies.ViewProducts);
 

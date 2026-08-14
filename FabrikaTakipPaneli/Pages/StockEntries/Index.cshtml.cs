@@ -41,6 +41,8 @@ public class IndexModel : PageModel
 
     public IList<StockEntryListItem> StockEntries { get; set; } = new List<StockEntryListItem>();
 
+    public IList<string> ProductNames { get; set; } = new List<string>();
+
     private IQueryable<StockEntry> BuildFilteredQuery()
     {
         var query = _context.StockEntries.AsQueryable();
@@ -69,6 +71,11 @@ public class IndexModel : PageModel
         var currentUserId = _userManager.GetUserId(User);
         var isAdmin = User.IsInRole(AppRoles.Admin);
 
+        ProductNames = await _context.Products
+            .OrderBy(p => p.Name)
+            .Select(p => p.Name)
+            .ToListAsync();
+
         var query = BuildFilteredQuery();
 
         var totalCount = await query.CountAsync();
@@ -90,7 +97,8 @@ public class IndexModel : PageModel
                 s.CreatedAt,
                 s.UserId,
                 UserName = s.User!.UserName,
-                s.Note
+                s.Note,
+                ShipmentId = s.Shipment != null ? s.Shipment.Id : (int?)null
             })
             .ToListAsync();
 
@@ -105,7 +113,8 @@ public class IndexModel : PageModel
             UserName = s.UserName,
             Note = s.Note,
             IsOwnEntry = s.UserId == currentUserId,
-            CanModify = StockEntryAccess.CanModify(s.UserId, s.CreatedAt, currentUserId, isAdmin)
+            CanModify = StockEntryAccess.CanModify(s.UserId, s.CreatedAt, currentUserId, isAdmin),
+            ShipmentId = s.ShipmentId
         }).ToList();
     }
 
@@ -170,5 +179,7 @@ public class IndexModel : PageModel
         public string? Note { get; set; }
         public bool IsOwnEntry { get; set; }
         public bool CanModify { get; set; }
+        public int? ShipmentId { get; set; }
+        public decimal TotalAmount => Quantity * (UnitPrice ?? 0);
     }
 }

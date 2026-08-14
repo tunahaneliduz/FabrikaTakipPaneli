@@ -1,0 +1,88 @@
+@page "{id:int}"
+@using FabrikaTakipPaneli.Models
+@model FabrikaTakipPaneli.Pages.Shipments.DetailsModel
+@{
+    ViewData["Title"] = "Sevkiyat Detayı";
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h1 class="mb-0"><i class="bi bi-truck"></i> @Model.Shipment.OrderNumber</h1>
+    <div class="d-flex gap-2">
+        <a asp-page="DownloadPdf" asp-route-id="@Model.Shipment.Id" class="btn btn-success">
+            <i class="bi bi-file-earmark-pdf"></i> Rapor İndir
+        </a>
+        <a asp-page="Index" class="btn btn-secondary">Listeye Dön</a>
+    </div>
+</div>
+
+<div class="panel" style="max-width: 780px;">
+<div class="panel-body">
+    <dl class="row">
+        <dt class="col-sm-4">Seri No</dt>
+        <dd class="col-sm-8 font-mono">@Model.Shipment.OrderNumber</dd>
+
+        <dt class="col-sm-4">Ürün</dt>
+        <dd class="col-sm-8">@Model.ProductName <span class="text-muted">(#@Model.ProductId)</span></dd>
+
+        <dt class="col-sm-4">Miktar</dt>
+        <dd class="col-sm-8 font-mono">@Model.Quantity.ToString("N2")</dd>
+
+        <dt class="col-sm-4">Birim Fiyat</dt>
+        <dd class="col-sm-8 font-mono">@(Model.UnitPrice?.ToString("N2"))</dd>
+
+        <dt class="col-sm-4">Toplam Tutar</dt>
+        <dd class="col-sm-8 font-mono">@Model.TotalAmount.ToString("N2")</dd>
+
+        <dt class="col-sm-4">Sertifika Bilgisi</dt>
+        <dd class="col-sm-8">@Model.Shipment.CertificateInfo</dd>
+
+        <dt class="col-sm-4">Varış Yeri</dt>
+        <dd class="col-sm-8">@Model.Shipment.Destination</dd>
+
+        <dt class="col-sm-4">Araç Plakası</dt>
+        <dd class="col-sm-8">@Model.Shipment.TruckPlate</dd>
+
+        <dt class="col-sm-4">Araç Kapasitesi</dt>
+        <dd class="col-sm-8">@Model.Shipment.TruckCapacity @(Model.Shipment.IsFullLoad ? "(Dolu)" : "(Boş)")</dd>
+
+        <dt class="col-sm-4">Sürücü</dt>
+        <dd class="col-sm-8">@Model.Shipment.DriverName @Model.Shipment.DriverPhone</dd>
+
+        <dt class="col-sm-4">Yola Çıkış</dt>
+        <dd class="col-sm-8 font-mono">@Model.Shipment.DepartureTime.ToString("g")</dd>
+
+        <dt class="col-sm-4">Tahmini Süre</dt>
+        <dd class="col-sm-8">@Model.Shipment.EstimatedTravelHours.ToString("N1") saat</dd>
+
+        <dt class="col-sm-4">Durum</dt>
+        <dd class="col-sm-8">
+            <span class="badge @Model.Shipment.EffectiveStatus.ToBadgeClass()">@Model.Shipment.EffectiveStatus.ToDisplayLabel()</span>
+            @if (Model.Shipment.ManualStatusOverride.HasValue)
+            {
+                <span class="text-muted"><small>(manuel olarak ayarlandı)</small></span>
+            }
+        </dd>
+    </dl>
+
+    @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
+    {
+        <hr />
+        <h5>Durumu Manuel Ayarla</h5>
+        <form method="post" asp-page-handler="SetOverride" class="row row-cols-lg-auto g-2 align-items-center">
+            <input type="hidden" name="id" value="@Model.Shipment.Id" />
+            <div class="col-12">
+                <select name="overrideStatus" class="form-control">
+                    <option value="">-- Otomatik hesapla --</option>
+                    @foreach (ShipmentStatus status in Enum.GetValues<ShipmentStatus>())
+                    {
+                        <option value="@status" selected="@(Model.Shipment.ManualStatusOverride == status)">@status.ToDisplayLabel()</option>
+                    }
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-outline-primary">Kaydet</button>
+            </div>
+        </form>
+    }
+</div>
+</div>

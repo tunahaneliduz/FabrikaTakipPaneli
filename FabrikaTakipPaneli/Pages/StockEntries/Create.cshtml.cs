@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using FabrikaTakipPaneli.Data;
 using FabrikaTakipPaneli.Models;
+using FabrikaTakipPaneli.Services;
 
 namespace FabrikaTakipPaneli.Pages.StockEntries;
 
@@ -33,6 +34,37 @@ public class CreateModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
+        if (Input.Type != StockEntryType.Out)
+        {
+            Input.AddShipment = false;
+        }
+
+        if (Input.AddShipment)
+        {
+            if (string.IsNullOrWhiteSpace(Input.Destination))
+            {
+                ModelState.AddModelError("Input.Destination", "Varış yeri zorunludur.");
+            }
+
+            if (Input.DepartureTime is null)
+            {
+                ModelState.AddModelError("Input.DepartureTime", "Yola çıkış zamanı zorunludur.");
+            }
+        }
+
+        if (Input.Type == StockEntryType.Out && Input.ProductId > 0)
+        {
+            var currentStock = await _context.StockEntries
+                .Where(s => s.ProductId == Input.ProductId)
+                .SumAsync(s => s.Type == StockEntryType.In ? s.Quantity : -s.Quantity);
+
+            if (Input.Quantity > currentStock)
+            {
+                ModelState.AddModelError("Input.Quantity",
+                    $"Yetersiz stok, mevcut: {currentStock:N2}, girilmeye çalışılan: {Input.Quantity:N2}");
+            }
+        }
+
         if (!ModelState.IsValid)
         {
             await LoadProductOptionsAsync();
@@ -59,6 +91,29 @@ public class CreateModel : PageModel
 
         _context.StockEntries.Add(stockEntry);
         await _context.SaveChangesAsync();
+
+        if (Input.AddShipment)
+        {
+            var orderNumber = await ShipmentOrderNumberGenerator.GenerateAsync(_context);
+
+            var shipment = new Shipment
+            {
+                StockEntryId = stockEntry.Id,
+                OrderNumber = orderNumber,
+                Destination = Input.Destination!,
+                TruckPlate = Input.TruckPlate,
+                TruckCapacity = Input.TruckCapacity,
+                IsFullLoad = Input.IsFullLoad,
+                DriverName = Input.DriverName,
+                DriverPhone = Input.DriverPhone,
+                DepartureTime = Input.DepartureTime!.Value,
+                EstimatedTravelHours = Input.EstimatedTravelHours ?? 0,
+                CertificateInfo = Input.CertificateInfo
+            };
+
+            _context.Shipments.Add(shipment);
+            await _context.SaveChangesAsync();
+        }
 
         return RedirectToPage("Index");
     }
@@ -94,5 +149,42 @@ public class CreateModel : PageModel
         [MaxLength(500)]
         [Display(Name = "Not")]
         public string? Note { get; set; }
+
+        [Display(Name = "Sevkiyat bilgisi ekle")]
+        public bool AddShipment { get; set; }
+
+        [MaxLength(300)]
+        [Display(Name = "Varış Yeri")]
+        public string? Destination { get; set; }
+
+        [MaxLength(20)]
+        [Display(Name = "Araç Plakası")]
+        public string? TruckPlate { get; set; }
+
+        [MaxLength(50)]
+        [Display(Name = "Araç Kapasitesi")]
+        public string? TruckCapacity { get; set; }
+
+        [Display(Name = "Dolu Yük")]
+        public bool IsFullLoad { get; set; }
+
+        [MaxLength(150)]
+        [Display(Name = "Sürücü Adı")]
+        public string? DriverName { get; set; }
+
+        [MaxLength(30)]
+        [Display(Name = "Sürücü Telefonu")]
+        public string? DriverPhone { get; set; }
+
+        [Display(Name = "Yola Çıkış Zamanı")]
+        public DateTime? DepartureTime { get; set; }
+
+        [Range(0, 1000, ErrorMessage = "Tahmini süre 0-1000 saat arasında olmalı.")]
+        [Display(Name = "Tahmini Yolculuk Süresi (saat)")]
+        public decimal? EstimatedTravelHours { get; set; }
+
+        [MaxLength(500)]
+        [Display(Name = "Sertifika Bilgisi")]
+        public string? CertificateInfo { get; set; }
     }
 }

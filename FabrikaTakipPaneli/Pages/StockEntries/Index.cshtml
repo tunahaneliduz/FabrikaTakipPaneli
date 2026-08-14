@@ -26,11 +26,22 @@
     <p class="text-muted"><small><i class="bi bi-info-circle"></i> Kayıtlar sadece oluşturulduğu gün içinde (gece yarısına kadar) düzenlenebilir veya silinebilir. Bu süre geçtikten sonra yalnızca yönetici değişiklik yapabilir.</small></p>
 }
 
-<form method="get" class="row row-cols-lg-auto g-2 align-items-center mb-3">
+<div class="mb-3">
+    <label for="quickProductSearch" class="form-label"><i class="bi bi-lightning-charge"></i> Hızlı Ürün Ara</label>
+    <input type="text" id="quickProductSearch" list="productNames" class="form-control form-control-lg" placeholder="Ürün adı yazın veya listeden seçin..." />
+    <datalist id="productNames">
+        @foreach (var name in Model.ProductNames)
+        {
+            <option value="@name"></option>
+        }
+    </datalist>
+</div>
+
+<form method="get" id="filterForm" class="row row-cols-lg-auto g-2 align-items-center mb-3">
     <div class="col-12">
         <div class="input-group">
             <span class="input-group-text"><i class="bi bi-search"></i></span>
-            <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Ürün adına göre ara..." />
+            <input type="text" name="SearchTerm" id="searchTermInput" value="@Model.SearchTerm" class="form-control" placeholder="Ürün adına göre ara..." />
         </div>
     </div>
     <div class="col-12">
@@ -55,6 +66,7 @@
                 <th>Tip</th>
                 <th class="text-end">Miktar</th>
                 <th class="text-end">Birim Fiyat</th>
+                <th class="text-end">Toplam Tutar</th>
                 <th>Tarih</th>
                 <th>Kullanıcı</th>
                 <th>Not</th>
@@ -64,7 +76,7 @@
         <tbody>
             @if (Model.StockEntries.Count == 0)
             {
-                <tr><td colspan="8" class="data-card-empty">Hareket bulunamadı.</td></tr>
+                <tr><td colspan="9" class="data-card-empty">Hareket bulunamadı.</td></tr>
             }
             @foreach (var entry in Model.StockEntries)
             {
@@ -82,9 +94,18 @@
                     </td>
                     <td class="text-end font-mono">@entry.Quantity.ToString("N2")</td>
                     <td class="text-end font-mono">@(entry.UnitPrice?.ToString("N2"))</td>
+                    <td class="text-end font-mono">@entry.TotalAmount.ToString("N2")</td>
                     <td class="font-mono">@entry.EntryDate.ToString("g")</td>
                     <td>@entry.UserName</td>
-                    <td>@entry.Note</td>
+                    <td>
+                        @entry.Note
+                        @if (entry.ShipmentId.HasValue)
+                        {
+                            <a asp-page="/Shipments/Details" asp-route-id="@entry.ShipmentId" class="badge text-bg-primary text-decoration-none" title="Sevkiyat detayı">
+                                <i class="bi bi-truck"></i> Sevkiyat
+                            </a>
+                        }
+                    </td>
                     <td class="text-end">
                         @if (entry.CanModify)
                         {
@@ -114,3 +135,20 @@
         ["EndDate"] = Model.EndDate?.ToString("yyyy-MM-dd")
     }
 })" />
+
+@section Scripts {
+    <script>
+        (function () {
+            var quickSearch = document.getElementById('quickProductSearch');
+            var searchTermInput = document.getElementById('searchTermInput');
+            var filterForm = document.getElementById('filterForm');
+
+            quickSearch.value = searchTermInput.value;
+
+            quickSearch.addEventListener('change', function () {
+                searchTermInput.value = quickSearch.value;
+                filterForm.submit();
+            });
+        })();
+    </script>
+}

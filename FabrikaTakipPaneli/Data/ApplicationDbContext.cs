@@ -14,6 +14,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
     public DbSet<Product> Products => Set<Product>();
     public DbSet<StockEntry> StockEntries => Set<StockEntry>();
+    public DbSet<Shipment> Shipments => Set<Shipment>();
+    public DbSet<ShipmentSequence> ShipmentSequences => Set<ShipmentSequence>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -29,6 +31,23 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
             .HasOne(s => s.User)
             .WithMany()
             .HasForeignKey(s => s.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<ShipmentSequence>()
+            .HasKey(s => s.Year);
+
+        builder.Entity<ShipmentSequence>()
+            .Property(s => s.Year)
+            .ValueGeneratedNever();
+
+        builder.Entity<Shipment>()
+            .HasIndex(s => s.OrderNumber)
+            .IsUnique();
+
+        builder.Entity<Shipment>()
+            .HasOne(s => s.StockEntry)
+            .WithOne(e => e.Shipment)
+            .HasForeignKey<Shipment>(s => s.StockEntryId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

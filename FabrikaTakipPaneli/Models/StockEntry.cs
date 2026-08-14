@@ -31,4 +31,6 @@ public class StockEntry
 
     [MaxLength(500)]
     public string? Note { get; set; }
+
+    public Shipment? Shipment { get; set; }
 }
