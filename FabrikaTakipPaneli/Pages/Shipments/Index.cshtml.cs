@@ -44,6 +44,8 @@ public class IndexModel : PageModel
         var query = _context.Shipments
             .Include(s => s.StockEntry)
             .ThenInclude(e => e!.Product)
+            .Include(s => s.Driver)
+            .Include(s => s.Vehicle)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(SearchTerm))
@@ -73,8 +75,8 @@ public class IndexModel : PageModel
             Id = s.Id,
             OrderNumber = s.OrderNumber,
             Destination = s.Destination,
-            DriverName = s.DriverName,
-            TruckPlate = s.TruckPlate,
+            DriverName = s.EffectiveDriverName,
+            TruckPlate = s.EffectiveTruckPlate,
             DepartureTime = s.DepartureTime,
             Status = s.EffectiveStatus,
             ProductName = s.StockEntry?.Product?.Name,

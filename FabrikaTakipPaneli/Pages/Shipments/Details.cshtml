@@ -15,6 +15,29 @@
     </div>
 </div>
 
+@{
+    var stepperStages = new (int Stage, string Icon, string Label)[]
+    {
+        (1, "bi-box-seam", "Hazırlanıyor"),
+        (2, "bi-truck", "Yolda"),
+        (3, "bi-geo-alt", "Teslim Ediliyor"),
+        (4, "bi-check-circle-fill", "Teslim Edildi"),
+    };
+    var currentStage = Model.Shipment.EffectiveVisualStage;
+}
+
+<div class="shipment-stepper mb-4" style="max-width: 780px;">
+    @foreach (var step in stepperStages)
+    {
+        var stateClass = step.Stage < currentStage ? "completed" : step.Stage == currentStage ? "active" : "upcoming";
+        <div class="shipment-stepper-step @stateClass">
+            <div class="shipment-stepper-line"></div>
+            <div class="shipment-stepper-icon"><i class="bi @step.Icon"></i></div>
+            <div class="shipment-stepper-label">@step.Label</div>
+        </div>
+    }
+</div>
+
 <div class="panel" style="max-width: 780px;">
 <div class="panel-body">
     <dl class="row">
@@ -40,13 +63,25 @@
         <dd class="col-sm-8">@Model.Shipment.Destination</dd>
 
         <dt class="col-sm-4">Araç Plakası</dt>
-        <dd class="col-sm-8">@Model.Shipment.TruckPlate</dd>
+        <dd class="col-sm-8">@Model.Shipment.EffectiveTruckPlate</dd>
 
         <dt class="col-sm-4">Araç Kapasitesi</dt>
-        <dd class="col-sm-8">@Model.Shipment.TruckCapacity @(Model.Shipment.IsFullLoad ? "(Dolu)" : "(Boş)")</dd>
+        <dd class="col-sm-8">@Model.Shipment.EffectiveTruckCapacity @(Model.Shipment.IsFullLoad ? "(Dolu)" : "(Boş)")</dd>
 
         <dt class="col-sm-4">Sürücü</dt>
-        <dd class="col-sm-8">@Model.Shipment.DriverName @Model.Shipment.DriverPhone</dd>
+        <dd class="col-sm-8">
+            @Model.Shipment.EffectiveDriverName
+            @if (Model.Shipment.EffectiveDriverPhoneTelHref is not null)
+            {
+                <a href="@Model.Shipment.EffectiveDriverPhoneTelHref" class="ms-1">
+                    <i class="bi bi-telephone-fill"></i> @Model.Shipment.EffectiveDriverPhone
+                </a>
+            }
+            else
+            {
+                @Model.Shipment.EffectiveDriverPhone
+            }
+        </dd>
 
         <dt class="col-sm-4">Yola Çıkış</dt>
         <dd class="col-sm-8 font-mono">@Model.Shipment.DepartureTime.ToString("g")</dd>
@@ -62,6 +97,14 @@
                 <span class="text-muted"><small>(manuel olarak ayarlandı)</small></span>
             }
         </dd>
+
+        @if (Model.Shipment.EstimatedTimeRemaining is { } remaining)
+        {
+            <dt class="col-sm-4">Tahmini Kalan Süre</dt>
+            <dd class="col-sm-8">
+                <i class="bi bi-hourglass-split"></i> Tahmini varışa kalan süre: @((int)remaining.TotalHours) saat @remaining.Minutes dakika
+            </dd>
+        }
     </dl>
 
     @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))

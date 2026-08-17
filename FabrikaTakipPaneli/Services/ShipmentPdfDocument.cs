@@ -1,3 +1,5 @@
+using System.Globalization;
+using FabrikaTakipPaneli.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -20,11 +22,17 @@ public class ShipmentPdfModel
     public string? DriverName { get; set; }
     public string? DriverPhone { get; set; }
     public DateTime DepartureTime { get; set; }
+    public ShipmentStatus Status { get; set; }
     public string StatusLabel { get; set; } = string.Empty;
 }
 
 public class ShipmentPdfDocument : IDocument
 {
+    private static readonly string BorderColor = Colors.Grey.Darken1;
+    private static readonly string HeaderBackground = Colors.Grey.Lighten3;
+
+    private static readonly CultureInfo TurkishCulture = CultureInfo.GetCultureInfo("tr-TR");
+
     private readonly ShipmentPdfModel _model;
 
     public ShipmentPdfDocument(ShipmentPdfModel model)
@@ -38,36 +46,145 @@ public class ShipmentPdfDocument : IDocument
     {
         container.Page(page =>
         {
-            page.Margin(40);
+            page.Margin(36);
             page.Size(PageSizes.A4);
-            page.DefaultTextStyle(x => x.FontSize(11));
+            page.DefaultTextStyle(x => x.FontSize(10).FontColor(Colors.Black));
 
-            page.Header().Text($"Sevkiyat Raporu - {_model.OrderNumber}").FontSize(18).Bold();
+            page.Header().Element(ComposeHeader);
+            page.Content().PaddingTop(16).Element(ComposeContent);
+            page.Footer().Element(ComposeFooter);
+        });
+    }
 
-            page.Content().PaddingVertical(15).Column(column =>
+    private void ComposeHeader(IContainer container)
+    {
+        container.Column(column =>
+        {
+            column.Item().Row(row =>
             {
-                column.Spacing(8);
+                row.RelativeItem().Column(inner =>
+                {
+                    inner.Item().Text("FABRİKATAKİPPANELİ").Bold().FontSize(11).LetterSpacing(0.05f).FontColor(Colors.Grey.Darken2);
+                    inner.Item().Text("SEVKİYAT RAPORU").Bold().FontSize(20);
+                });
 
-                column.Item().Text("Ürün Bilgisi").Bold().FontSize(13);
-                column.Item().Text($"Ürün: {_model.ProductName} (#{_model.ProductId})");
-                column.Item().Text($"Miktar: {_model.Quantity:N2}");
-                column.Item().Text($"Birim Fiyat: {(_model.UnitPrice.HasValue ? _model.UnitPrice.Value.ToString("N2") : "-")}");
-                column.Item().Text($"Toplam Tutar: {_model.TotalAmount:N2}");
-                column.Item().Text($"Sertifika Bilgisi: {_model.CertificateInfo ?? "-"}");
-
-                column.Item().PaddingTop(10).Text("Sevkiyat Detayları").Bold().FontSize(13);
-                column.Item().Text($"Varış Yeri: {_model.Destination}");
-                column.Item().Text($"Araç Plakası: {_model.TruckPlate ?? "-"}");
-                column.Item().Text($"Araç Kapasitesi: {_model.TruckCapacity ?? "-"} ({(_model.IsFullLoad ? "Dolu" : "Boş")})");
-                column.Item().Text($"Sürücü: {_model.DriverName ?? "-"} {_model.DriverPhone ?? string.Empty}");
-                column.Item().Text($"Yola Çıkış: {_model.DepartureTime:g}");
-                column.Item().Text($"Durum: {_model.StatusLabel}");
+                row.ConstantItem(180).Column(inner =>
+                {
+                    inner.Item().AlignRight().Text("Seri No").FontSize(9).FontColor(Colors.Grey.Darken2);
+                    inner.Item().AlignRight().Text(_model.OrderNumber).Bold().FontSize(16);
+                    inner.Item().PaddingTop(4).AlignRight().Element(c => ComposeStatusBadge(c));
+                });
             });
 
-            page.Footer().AlignCenter().Text(text =>
+            column.Item().PaddingTop(10).LineHorizontal(1.5f).LineColor(Colors.Black);
+        });
+    }
+
+    private void ComposeStatusBadge(IContainer container)
+    {
+        var (background, textColor) = _model.Status switch
+        {
+            ShipmentStatus.Yolda => (Colors.Orange.Lighten4, Colors.Orange.Darken3),
+            ShipmentStatus.TeslimEdiliyor => (Colors.Blue.Lighten4, Colors.Blue.Darken3),
+            ShipmentStatus.TeslimEdildi => (Colors.Green.Lighten4, Colors.Green.Darken3),
+            _ => (Colors.Grey.Lighten3, Colors.Grey.Darken3)
+        };
+
+        container.Background(background)
+            .Border(1)
+            .BorderColor(textColor)
+            .PaddingVertical(3)
+            .PaddingHorizontal(8)
+            .Text(_model.StatusLabel.ToUpper(TurkishCulture))
+            .Bold()
+            .FontSize(9)
+            .FontColor(textColor);
+    }
+
+    private void ComposeContent(IContainer container)
+    {
+        container.Column(column =>
+        {
+            column.Spacing(16);
+
+            column.Item().Element(c => ComposeSection(c, "ÜRÜN BİLGİSİ", section =>
             {
-                text.Span("Oluşturulma: ").FontSize(9);
-                text.Span(DateTime.Now.ToString("g")).FontSize(9);
+                section.Row("Ürün", $"{_model.ProductName} (#{_model.ProductId})");
+                section.Row("Miktar", _model.Quantity.ToString("N2"));
+                section.Row("Birim Fiyat", _model.UnitPrice.HasValue ? _model.UnitPrice.Value.ToString("N2") : "-");
+                section.Row("Toplam Tutar", _model.TotalAmount.ToString("N2"));
+                section.Row("Sertifika Bilgisi", _model.CertificateInfo ?? "-");
+            }));
+
+            column.Item().Element(c => ComposeSection(c, "SEVKİYAT DETAYLARI", section =>
+            {
+                section.Row("Varış Yeri", _model.Destination);
+                section.Row("Araç Plakası", _model.TruckPlate ?? "-");
+                section.Row("Araç Kapasitesi", $"{_model.TruckCapacity ?? "-"} ({(_model.IsFullLoad ? "Dolu" : "Boş")})");
+                section.Row("Sürücü", _model.DriverName ?? "-");
+                section.Row("Sürücü Telefonu", _model.DriverPhone ?? "-");
+                section.Row("Yola Çıkış", _model.DepartureTime.ToString("g"));
+            }));
+        });
+    }
+
+    private void ComposeSection(IContainer container, string title, Action<SectionBuilder> build)
+    {
+        container.Column(column =>
+        {
+            column.Item()
+                .Background(HeaderBackground)
+                .Border(1)
+                .BorderColor(BorderColor)
+                .Padding(6)
+                .Text(title).Bold().FontSize(11).LetterSpacing(0.03f);
+
+            column.Item().Table(table =>
+            {
+                table.ColumnsDefinition(columns =>
+                {
+                    columns.RelativeColumn(1);
+                    columns.RelativeColumn(2);
+                });
+
+                var builder = new SectionBuilder(table);
+                build(builder);
+            });
+        });
+    }
+
+    private sealed class SectionBuilder
+    {
+        private readonly TableDescriptor _table;
+        private bool _alternate;
+
+        public SectionBuilder(TableDescriptor table)
+        {
+            _table = table;
+        }
+
+        public void Row(string label, string value)
+        {
+            var background = _alternate ? Colors.Grey.Lighten5 : Colors.White;
+            _alternate = !_alternate;
+
+            _table.Cell().Background(background).Border(1).BorderColor(BorderColor).Padding(6)
+                .Text(label).SemiBold().FontColor(Colors.Grey.Darken3);
+
+            _table.Cell().Background(background).Border(1).BorderColor(BorderColor).Padding(6)
+                .Text(value);
+        }
+    }
+
+    private void ComposeFooter(IContainer container)
+    {
+        container.Column(column =>
+        {
+            column.Item().PaddingBottom(4).LineHorizontal(0.75f).LineColor(BorderColor);
+            column.Item().Row(row =>
+            {
+                row.RelativeItem().Text("Bu belge otomatik oluşturulmuştur.").FontSize(8).FontColor(Colors.Grey.Darken1).Italic();
+                row.RelativeItem().AlignRight().Text($"Oluşturulma: {DateTime.Now:g}").FontSize(8).FontColor(Colors.Grey.Darken1);
             });
         });
     }

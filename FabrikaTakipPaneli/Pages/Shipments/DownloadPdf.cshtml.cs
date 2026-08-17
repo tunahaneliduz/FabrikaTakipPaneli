@@ -22,6 +22,8 @@ public class DownloadPdfModel : PageModel
         var shipment = await _context.Shipments
             .Include(s => s.StockEntry)
             .ThenInclude(e => e!.Product)
+            .Include(s => s.Driver)
+            .Include(s => s.Vehicle)
             .FirstOrDefaultAsync(s => s.Id == id);
 
         if (shipment is null)
@@ -42,12 +44,13 @@ public class DownloadPdfModel : PageModel
             TotalAmount = quantity * (unitPrice ?? 0),
             CertificateInfo = shipment.CertificateInfo,
             Destination = shipment.Destination,
-            TruckPlate = shipment.TruckPlate,
-            TruckCapacity = shipment.TruckCapacity,
+            TruckPlate = shipment.EffectiveTruckPlate,
+            TruckCapacity = shipment.EffectiveTruckCapacity,
             IsFullLoad = shipment.IsFullLoad,
-            DriverName = shipment.DriverName,
-            DriverPhone = shipment.DriverPhone,
+            DriverName = shipment.EffectiveDriverName,
+            DriverPhone = shipment.EffectiveDriverPhone,
             DepartureTime = shipment.DepartureTime,
+            Status = shipment.EffectiveStatus,
             StatusLabel = shipment.EffectiveStatus.ToDisplayLabel()
         };
 

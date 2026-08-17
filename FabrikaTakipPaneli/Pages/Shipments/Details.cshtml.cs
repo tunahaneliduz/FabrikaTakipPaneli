@@ -29,6 +29,8 @@ public class DetailsModel : PageModel
         var shipment = await _context.Shipments
             .Include(s => s.StockEntry)
             .ThenInclude(e => e!.Product)
+            .Include(s => s.Driver)
+            .Include(s => s.Vehicle)
             .FirstOrDefaultAsync(s => s.Id == id);
 
         if (shipment is null)

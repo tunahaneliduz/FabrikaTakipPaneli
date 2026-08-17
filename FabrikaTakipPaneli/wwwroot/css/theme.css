@@ -25,97 +25,110 @@
 :root {
   --bs-font-sans-serif: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Zeytin yeşili vurgu rengi */
-  --app-accent: #6f7d34;
-  --app-accent-hover: #56612a;
-  --app-accent-rgb: 111, 125, 52;
-  --app-accent-soft: rgba(111, 125, 52, 0.1);
+  /* Güvenlik turuncusu vurgu rengi */
+  --app-accent: #b85f1e;
+  --app-accent-hover: #96501a;
+  --app-accent-rgb: 184, 95, 30;
+  --app-accent-soft: rgba(184, 95, 30, 0.1);
 
   --app-radius-sm: 0.25rem;
   --app-radius: 0.375rem;
   --app-radius-lg: 0.5rem;
 
-  --app-grid-line: rgba(38, 35, 20, 0.05);
   --app-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
 
-  --app-shadow-sm: 0 1px 2px rgba(38, 35, 20, 0.06), 0 1px 3px rgba(38, 35, 20, 0.08);
-  --app-shadow: 0 4px 6px -1px rgba(38, 35, 20, 0.08), 0 2px 4px -2px rgba(38, 35, 20, 0.06);
-  --app-shadow-hover: 0 4px 10px -4px rgba(38, 35, 20, 0.16), 0 2px 4px -2px rgba(38, 35, 20, 0.1);
+  /* Dolu (turuncu) butonlarda kullanılan sabit koyu metin rengi - her iki temada da aynı */
+  --app-btn-fill-text: #1c1c1a;
 
-  --app-navbar-bg: #fffdf7;
-  --app-surface-alt: #f1ede0;
+  /* Sayfanın üst köşesinden gelen çok hafif koyulaşma geçişi */
+  --app-corner-gradient: linear-gradient(135deg, rgba(20, 20, 18, 0.045) 0%, rgba(20, 20, 18, 0) 55%);
 
-  /* Sıcak, doğal nötrler (bej/krem) */
-  --bs-body-bg: #f8f6ee;
-  --bs-body-color: #2b2a22;
-  --bs-emphasis-color: #1f1e17;
-  --bs-secondary-color: #6b6a5c;
-  --bs-border-color: #e3ddc9;
-  --bs-border-color-translucent: #e3ddc9;
-  --bs-secondary-bg: #f1ede0;
-  --bs-tertiary-bg: #f1ede0;
+  --app-shadow-sm: 0 1px 2px rgba(20, 20, 18, 0.06), 0 1px 3px rgba(20, 20, 18, 0.08);
+  --app-shadow: 0 4px 6px -1px rgba(20, 20, 18, 0.08), 0 2px 4px -2px rgba(20, 20, 18, 0.06);
+  --app-shadow-hover: 0 4px 10px -4px rgba(20, 20, 18, 0.16), 0 2px 4px -2px rgba(20, 20, 18, 0.1);
 
-  --bs-card-bg: #fffdf7;
-  --bs-card-border-color: #e3ddc9;
+  --app-navbar-bg: #fbfbfa;
+  --app-surface-alt: #e7e7e3;
+
+  /* Nötr beton grisi tonları */
+  --bs-body-bg: #f1f1ef;
+  --bs-body-color: #232322;
+  --bs-emphasis-color: #171716;
+  --bs-secondary-color: #65655e;
+  --bs-border-color: #dcdcd8;
+  --bs-border-color-translucent: #dcdcd8;
+  --bs-secondary-bg: #e7e7e3;
+  --bs-tertiary-bg: #e7e7e3;
+
+  --bs-card-bg: #fbfbfa;
+  --bs-card-border-color: #dcdcd8;
 
   --bs-table-bg: transparent;
-  --bs-table-color: #2b2a22;
-  --bs-table-border-color: #e3ddc9;
-  --bs-table-hover-bg: #f1ede0;
+  --bs-table-color: #232322;
+  --bs-table-border-color: #dcdcd8;
+  --bs-table-hover-bg: #e7e7e3;
 
   --bs-link-color: var(--app-accent);
   --bs-link-hover-color: var(--app-accent-hover);
   --bs-link-color-rgb: var(--app-accent-rgb);
   --bs-link-hover-color-rgb: var(--app-accent-rgb);
 
-  /* Hardal sarısı - "Çıkış" ve uyarı vurguları */
-  --bs-warning: #c9a227;
-  --bs-warning-rgb: 201, 162, 39;
+  /* Bootstrap'ın öntanımlı mavisi yerine vurgu turuncusu (badge/checkbox/spinner gibi bileşenler için) */
+  --bs-primary: var(--app-accent);
+  --bs-primary-rgb: var(--app-accent-rgb);
+
+  /* Altın amber - "Yolda" durumu ve genel uyarı vurguları (turuncu vurgudan ayrışsın diye sarıya kaydırıldı) */
+  --bs-warning: #a8841c;
+  --bs-warning-rgb: 168, 132, 28;
   /* Olgun yeşil - "Giriş" ve başarı vurguları */
   --bs-success: #5f7d32;
   --bs-success-rgb: 95, 125, 50;
 }
 
 [data-bs-theme="dark"] {
-  /* Zeytin yeşili vurgu rengi (koyu temada aydınlatılmış) */
-  --app-accent: #a3b565;
-  --app-accent-hover: #b7c67e;
-  --app-accent-rgb: 163, 181, 101;
-  --app-accent-soft: rgba(163, 181, 101, 0.16);
+  /* Güvenlik turuncusu vurgu rengi (koyu temada aydınlatılmış) */
+  --app-accent: #e07a2c;
+  --app-accent-hover: #ec9350;
+  --app-accent-rgb: 224, 122, 44;
+  --app-accent-soft: rgba(224, 122, 44, 0.16);
 
   --app-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
   --app-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45), 0 2px 4px -2px rgba(0, 0, 0, 0.35);
   --app-shadow-hover: 0 4px 10px -4px rgba(0, 0, 0, 0.6), 0 2px 4px -2px rgba(0, 0, 0, 0.45);
 
-  --app-grid-line: rgba(239, 233, 216, 0.06);
+  /* Sayfanın üst köşesinden gelen çok hafif koyulaşma geçişi (koyu temada belirgin) */
+  --app-corner-gradient: linear-gradient(135deg, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0) 55%);
 
-  --app-navbar-bg: #211f16;
-  --app-surface-alt: #282618;
+  --app-navbar-bg: #201f1d;
+  --app-surface-alt: #292927;
 
-  /* Sıcak, doğal nötrler (koyu toprak tonları) */
-  --bs-body-bg: #1b1a13;
-  --bs-body-color: #efe9d8;
-  --bs-emphasis-color: #faf7ec;
-  --bs-secondary-color: #aca493;
-  --bs-border-color: #3a3726;
-  --bs-border-color-translucent: #3a3726;
-  --bs-secondary-bg: #26241a;
-  --bs-tertiary-bg: #26241a;
+  /* Nötr beton grisi tonları (koyu tema) */
+  --bs-body-bg: #1e1e1c;
+  --bs-body-color: #e8e8e4;
+  --bs-emphasis-color: #f5f5f2;
+  --bs-secondary-color: #a3a39c;
+  --bs-border-color: #3a3a38;
+  --bs-border-color-translucent: #3a3a38;
+  --bs-secondary-bg: #292927;
+  --bs-tertiary-bg: #292927;
 
-  --bs-card-bg: #211f16;
-  --bs-card-border-color: #3a3726;
+  --bs-card-bg: #242422;
+  --bs-card-border-color: #3a3a38;
 
   --bs-table-bg: transparent;
-  --bs-table-color: #efe9d8;
-  --bs-table-border-color: #3a3726;
-  --bs-table-hover-bg: #282618;
+  --bs-table-color: #e8e8e4;
+  --bs-table-border-color: #3a3a38;
+  --bs-table-hover-bg: #292927;
 
   --bs-link-color: var(--app-accent);
   --bs-link-hover-color: var(--app-accent-hover);
 
-  /* Hardal sarısı (koyu temada aydınlatılmış) */
-  --bs-warning: #d9b64f;
-  --bs-warning-rgb: 217, 182, 79;
+  --bs-primary: var(--app-accent);
+  --bs-primary-rgb: var(--app-accent-rgb);
+
+  /* Altın amber (koyu temada aydınlatılmış) */
+  --bs-warning: #d4ab3f;
+  --bs-warning-rgb: 212, 171, 63;
   /* Olgun yeşil (koyu temada aydınlatılmış) */
   --bs-success: #7c9c4c;
   --bs-success-rgb: 124, 156, 76;
@@ -126,10 +139,10 @@
    ========================================================================== */
 body {
   background-color: var(--bs-body-bg);
-  background-image:
-    linear-gradient(var(--app-grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--app-grid-line) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image: var(--app-corner-gradient);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
@@ -169,33 +182,96 @@ button:focus-visible,
 /* ==========================================================================
    Buttons & links (accent)
    ========================================================================== */
-.btn-primary {
+.btn {
+  border-radius: 0;
+  border-width: 1.5px;
+  font-family: var(--app-font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: filter 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn:hover {
+  filter: brightness(1.12);
+}
+
+.btn:active {
+  filter: brightness(0.96);
+}
+
+/* Birincil (dolu turuncu + koyu metin) */
+.btn-primary,
+.btn-outline-primary {
   --bs-btn-bg: var(--app-accent);
   --bs-btn-border-color: var(--app-accent);
-  --bs-btn-hover-bg: var(--app-accent-hover);
-  --bs-btn-hover-border-color: var(--app-accent-hover);
-  --bs-btn-active-bg: var(--app-accent-hover);
-  --bs-btn-active-border-color: var(--app-accent-hover);
+  --bs-btn-color: var(--app-btn-fill-text);
+  --bs-btn-hover-bg: var(--app-accent);
+  --bs-btn-hover-border-color: var(--app-accent);
+  --bs-btn-hover-color: var(--app-btn-fill-text);
+  --bs-btn-active-bg: var(--app-accent);
+  --bs-btn-active-border-color: var(--app-accent);
+  --bs-btn-active-color: var(--app-btn-fill-text);
   --bs-btn-disabled-bg: var(--app-accent);
   --bs-btn-disabled-border-color: var(--app-accent);
+  --bs-btn-disabled-color: var(--app-btn-fill-text);
   --bs-btn-focus-shadow-rgb: var(--app-accent-rgb);
 }
 
 .btn-outline-primary {
+  --bs-btn-bg: transparent;
   --bs-btn-color: var(--app-accent);
+}
+
+/* İkincil/İptal (şeffaf + turuncu kenarlık/metin) */
+.btn-secondary,
+.btn-outline-secondary {
+  --bs-btn-bg: transparent;
   --bs-btn-border-color: var(--app-accent);
+  --bs-btn-color: var(--app-accent);
   --bs-btn-hover-bg: var(--app-accent);
   --bs-btn-hover-border-color: var(--app-accent);
+  --bs-btn-hover-color: var(--app-btn-fill-text);
   --bs-btn-active-bg: var(--app-accent);
   --bs-btn-active-border-color: var(--app-accent);
+  --bs-btn-active-color: var(--app-btn-fill-text);
   --bs-btn-disabled-color: var(--app-accent);
   --bs-btn-disabled-border-color: var(--app-accent);
+  --bs-btn-disabled-bg: transparent;
   --bs-btn-focus-shadow-rgb: var(--app-accent-rgb);
 }
 
-.btn {
-  border-radius: var(--app-radius-sm);
-  font-weight: 500;
+/* Diğer anlamsal renkler (silme=kırmızı, indir=yeşil) aynı dolu/outline yapısını kendi rengiyle korur */
+.btn-danger,
+.btn-success,
+.btn-info,
+.btn-warning {
+  --bs-btn-color: var(--app-btn-fill-text);
+  --bs-btn-hover-color: var(--app-btn-fill-text);
+  --bs-btn-active-color: var(--app-btn-fill-text);
+  --bs-btn-disabled-color: var(--app-btn-fill-text);
+}
+
+.btn-outline-danger,
+.btn-outline-success,
+.btn-outline-info,
+.btn-outline-warning {
+  --bs-btn-hover-color: var(--app-btn-fill-text);
+  --bs-btn-active-color: var(--app-btn-fill-text);
+}
+
+/* Rozetler (Giriş/Çıkış, sevkiyat durumu, roller vb.) butonlarla tutarlı keskin/mono/büyük harf stil */
+.badge {
+  border-radius: 0;
+  font-family: var(--app-font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* Bootstrap'ın .text-bg-primary'de sabitlediği beyaz metni, dolu turuncu butonlarla tutarlı koyu metne çevir */
+.text-bg-primary {
+  color: var(--app-btn-fill-text) !important;
 }
 
 /* ==========================================================================
@@ -209,17 +285,37 @@ button:focus-visible,
 }
 
 .app-navbar .navbar-brand {
-  font-weight: 800;
-  font-size: 1.05rem;
-  letter-spacing: -0.01em;
   color: var(--bs-emphasis-color);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
-.app-navbar .navbar-brand i {
+.app-navbar .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   color: var(--app-accent);
+}
+
+.app-navbar .brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.app-navbar .brand-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--bs-emphasis-color);
+}
+
+.app-navbar .brand-tagline {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--bs-secondary-color);
 }
 
 .app-nav-link {
@@ -320,7 +416,7 @@ button:focus-visible,
 }
 
 .dropdown-menu .dropdown-item i {
-  color: var(--app-accent);
+  color: var(--bs-secondary-color);
   width: 1.1rem;
   text-align: center;
 }
@@ -398,79 +494,35 @@ button:focus-visible,
 }
 
 /* ==========================================================================
-   KPI cards (Dashboard)
+   Durum özeti (Ana Sayfa / Dashboard) - "cümle içinde özet"
    ========================================================================== */
-.kpi-card {
-  background-color: var(--bs-card-bg);
-  border: 1px solid var(--bs-card-border-color);
-  border-radius: var(--app-radius);
-  box-shadow: var(--app-shadow-sm);
-  padding: 1.25rem 1.4rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  height: 100%;
-  text-decoration: none;
-  color: inherit;
-  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+.status-summary {
+  padding: 1.1rem 0 1.35rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--bs-border-color);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--bs-secondary-color);
+  max-width: 62rem;
 }
 
-.kpi-card:hover {
-  box-shadow: var(--app-shadow);
-  transform: translateY(-1px);
-  border-color: var(--app-accent);
-  color: inherit;
-}
-
-.kpi-card:focus-visible {
-  outline: 2px solid var(--app-accent);
-  outline-offset: 2px;
-}
-
-.kpi-card .kpi-icon {
-  width: 3rem;
-  height: 3rem;
-  border-radius: var(--app-radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.35rem;
-  flex-shrink: 0;
-}
-
-.kpi-card .kpi-value {
-  font-size: 1.75rem;
+.status-figure {
+  font-family: var(--app-font-mono);
+  font-size: 1.25rem;
   font-weight: 700;
-  line-height: 1.1;
+}
+
+.status-figure-neutral {
   color: var(--bs-emphasis-color);
 }
 
-.kpi-card .kpi-label {
-  color: var(--bs-secondary-color);
-  font-size: 0.85rem;
-  font-weight: 500;
+.status-figure-accent {
+  color: var(--app-accent);
 }
 
-.kpi-card .kpi-arrow {
-  margin-left: auto;
-  color: var(--bs-secondary-color);
-  opacity: 0;
-  transform: translateX(-3px);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+.status-figure-positive {
+  color: var(--bs-success);
 }
-
-.kpi-card:hover .kpi-arrow,
-.kpi-card:focus-visible .kpi-arrow {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.kpi-card.kpi-accent .kpi-icon { background-color: var(--app-accent-soft); color: var(--app-accent); }
-.kpi-card.kpi-info .kpi-icon { background-color: rgba(56, 189, 248, 0.14); color: #0284c7; }
-[data-bs-theme="dark"] .kpi-card.kpi-info .kpi-icon { color: #38bdf8; }
-.kpi-card.kpi-neutral .kpi-icon { background-color: var(--app-surface-alt); color: var(--bs-secondary-color); }
-.kpi-card.kpi-danger .kpi-icon { background-color: rgba(220, 38, 38, 0.12); color: #dc2626; }
-[data-bs-theme="dark"] .kpi-card.kpi-danger .kpi-icon { color: #f87171; }
 
 /* ==========================================================================
    Panels (dashboard sections, forms)
@@ -496,7 +548,7 @@ button:focus-visible,
 }
 
 .panel-header i {
-  color: var(--app-accent);
+  color: var(--bs-secondary-color);
 }
 
 .panel-body {
@@ -554,7 +606,7 @@ button:focus-visible,
 .feature-card:hover {
   box-shadow: var(--app-shadow-hover);
   transform: translateY(-1px);
-  border-color: var(--app-accent);
+  border-color: var(--bs-emphasis-color);
 }
 
 .feature-card-icon {
@@ -564,8 +616,8 @@ button:focus-visible,
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--app-accent-soft);
-  color: var(--app-accent);
+  background-color: var(--app-surface-alt);
+  color: var(--bs-secondary-color);
   font-size: 1.25rem;
   margin-bottom: 0.85rem;
 }
@@ -622,8 +674,8 @@ button:focus-visible,
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--app-accent);
-  color: #fff;
+  background-color: var(--app-surface-alt);
+  color: var(--bs-emphasis-color);
   font-weight: 700;
   margin-bottom: 0.75rem;
 }
@@ -687,7 +739,7 @@ button:focus-visible,
 }
 
 .welcome-meta i {
-  color: var(--app-accent);
+  color: var(--bs-secondary-color);
   margin-right: 0.3rem;
 }
 
@@ -745,7 +797,7 @@ button:focus-visible,
 .location-card {
   background-color: var(--bs-card-bg);
   border: 1px solid var(--bs-card-border-color);
-  border-left: 4px solid var(--app-accent);
+  border-left: 4px solid var(--bs-border-color);
   border-radius: var(--app-radius);
   box-shadow: var(--app-shadow-sm);
   padding: 1rem 1.15rem;
@@ -774,7 +826,7 @@ button:focus-visible,
 }
 
 .location-card .location-name i {
-  color: var(--app-accent);
+  color: var(--bs-secondary-color);
 }
 
 .location-card.has-critical .location-name i {
@@ -812,4 +864,89 @@ button:focus-visible,
 .form-control:focus, .form-select:focus {
   border-color: var(--app-accent);
   box-shadow: 0 0 0 0.2rem var(--app-accent-soft);
+}
+
+/* ==========================================================================
+   Shipment progress stepper
+   ========================================================================== */
+.shipment-stepper {
+  display: flex;
+  align-items: flex-start;
+}
+
+.shipment-stepper-step {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.shipment-stepper-line {
+  position: absolute;
+  top: 1.25rem;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background-color: var(--bs-border-color);
+  z-index: 0;
+}
+
+.shipment-stepper-step:first-child .shipment-stepper-line {
+  display: none;
+}
+
+.shipment-stepper-icon {
+  position: relative;
+  z-index: 1;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  background-color: var(--bs-body-bg);
+  border: 2px solid var(--bs-border-color);
+  color: var(--bs-secondary-color);
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.shipment-stepper-label {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--bs-secondary-color);
+}
+
+.shipment-stepper-step.completed .shipment-stepper-line {
+  background-color: var(--bs-success);
+}
+
+.shipment-stepper-step.completed .shipment-stepper-icon {
+  background-color: var(--bs-success);
+  border-color: var(--bs-success);
+  color: #fff;
+}
+
+.shipment-stepper-step.completed .shipment-stepper-label {
+  color: var(--bs-success);
+}
+
+.shipment-stepper-step.active .shipment-stepper-icon {
+  background-color: var(--app-accent);
+  border-color: var(--app-accent);
+  color: #fff;
+  box-shadow: 0 0 0 4px var(--app-accent-soft);
+}
+
+.shipment-stepper-step.active .shipment-stepper-label {
+  color: var(--app-accent);
+  font-weight: 700;
+}
+
+.shipment-stepper-step.upcoming .shipment-stepper-icon,
+.shipment-stepper-step.upcoming .shipment-stepper-label {
+  opacity: 0.5;
 }

@@ -56,24 +56,26 @@
             <span asp-validation-for="Input.Destination" class="text-danger"></span>
         </div>
         <div class="form-group mb-2">
-            <label asp-for="Input.TruckPlate" class="control-label"></label>
-            <input asp-for="Input.TruckPlate" class="form-control" />
-        </div>
-        <div class="form-group mb-2">
-            <label asp-for="Input.TruckCapacity" class="control-label"></label>
-            <input asp-for="Input.TruckCapacity" class="form-control" />
+            <label asp-for="Input.VehicleId" class="control-label"></label>
+            <select asp-for="Input.VehicleId" asp-items="Model.VehicleOptions" class="form-control">
+                <option value="">-- Araç seçin --</option>
+            </select>
+            <small class="form-text text-muted">
+                Listede yok mu? <a asp-page="/Vehicles/Create" target="_blank">Yeni araç ekle <i class="bi bi-box-arrow-up-right"></i></a>
+            </small>
         </div>
         <div class="form-check mb-2">
             <input asp-for="Input.IsFullLoad" class="form-check-input" />
             <label asp-for="Input.IsFullLoad" class="form-check-label"></label>
         </div>
         <div class="form-group mb-2">
-            <label asp-for="Input.DriverName" class="control-label"></label>
-            <input asp-for="Input.DriverName" class="form-control" />
-        </div>
-        <div class="form-group mb-2">
-            <label asp-for="Input.DriverPhone" class="control-label"></label>
-            <input asp-for="Input.DriverPhone" class="form-control" />
+            <label asp-for="Input.DriverId" class="control-label"></label>
+            <select asp-for="Input.DriverId" asp-items="Model.DriverOptions" class="form-control">
+                <option value="">-- Sürücü seçin --</option>
+            </select>
+            <small class="form-text text-muted">
+                Listede yok mu? <a asp-page="/Drivers/Create" target="_blank">Yeni sürücü ekle <i class="bi bi-box-arrow-up-right"></i></a>
+            </small>
         </div>
         <div class="form-group mb-2">
             <label asp-for="Input.DepartureTime" class="control-label"></label>

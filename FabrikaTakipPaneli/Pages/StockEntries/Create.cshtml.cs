@@ -25,11 +25,14 @@ public class CreateModel : PageModel
     public InputModel Input { get; set; } = new();
 
     public SelectList ProductOptions { get; set; } = default!;
+    public SelectList DriverOptions { get; set; } = default!;
+    public SelectList VehicleOptions { get; set; } = default!;
 
     public async Task OnGetAsync()
     {
         Input.EntryDate = DateTime.Now;
         await LoadProductOptionsAsync();
+        await LoadDriverAndVehicleOptionsAsync();
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -68,6 +71,7 @@ public class CreateModel : PageModel
         if (!ModelState.IsValid)
         {
             await LoadProductOptionsAsync();
+            await LoadDriverAndVehicleOptionsAsync();
             return Page();
         }
 
@@ -101,11 +105,9 @@ public class CreateModel : PageModel
                 StockEntryId = stockEntry.Id,
                 OrderNumber = orderNumber,
                 Destination = Input.Destination!,
-                TruckPlate = Input.TruckPlate,
-                TruckCapacity = Input.TruckCapacity,
+                DriverId = Input.DriverId,
+                VehicleId = Input.VehicleId,
                 IsFullLoad = Input.IsFullLoad,
-                DriverName = Input.DriverName,
-                DriverPhone = Input.DriverPhone,
                 DepartureTime = Input.DepartureTime!.Value,
                 EstimatedTravelHours = Input.EstimatedTravelHours ?? 0,
                 CertificateInfo = Input.CertificateInfo
@@ -122,6 +124,15 @@ public class CreateModel : PageModel
     {
         var products = await _context.Products.OrderBy(p => p.Name).ToListAsync();
         ProductOptions = new SelectList(products, nameof(Product.Id), nameof(Product.Name));
+    }
+
+    private async Task LoadDriverAndVehicleOptionsAsync()
+    {
+        var drivers = await _context.Drivers.OrderBy(d => d.FullName).ToListAsync();
+        DriverOptions = new SelectList(drivers, nameof(Driver.Id), nameof(Driver.FullName));
+
+        var vehicles = await _context.Vehicles.OrderBy(v => v.PlateNumber).ToListAsync();
+        VehicleOptions = new SelectList(vehicles, nameof(Vehicle.Id), nameof(Vehicle.PlateNumber));
     }
 
     public class InputModel
@@ -157,24 +168,14 @@ public class CreateModel : PageModel
         [Display(Name = "Varış Yeri")]
         public string? Destination { get; set; }
 
-        [MaxLength(20)]
-        [Display(Name = "Araç Plakası")]
-        public string? TruckPlate { get; set; }
-
-        [MaxLength(50)]
-        [Display(Name = "Araç Kapasitesi")]
-        public string? TruckCapacity { get; set; }
+        [Display(Name = "Araç")]
+        public int? VehicleId { get; set; }
 
         [Display(Name = "Dolu Yük")]
         public bool IsFullLoad { get; set; }
 
-        [MaxLength(150)]
-        [Display(Name = "Sürücü Adı")]
-        public string? DriverName { get; set; }
-
-        [MaxLength(30)]
-        [Display(Name = "Sürücü Telefonu")]
-        public string? DriverPhone { get; set; }
+        [Display(Name = "Sürücü")]
+        public int? DriverId { get; set; }
 
         [Display(Name = "Yola Çıkış Zamanı")]
         public DateTime? DepartureTime { get; set; }

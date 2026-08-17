@@ -41,6 +41,9 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AuthorizeFolder("/Dashboard", AppPolicies.ViewProducts);
 
     options.Conventions.AuthorizeFolder("/Admin", AppPolicies.AdminOnly);
+
+    options.Conventions.AuthorizeFolder("/Drivers", AppPolicies.AdminOnly);
+    options.Conventions.AuthorizeFolder("/Vehicles", AppPolicies.AdminOnly);
 });
 
 var app = builder.Build();

@@ -32,8 +32,16 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm app-navbar mb-4">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">
-                    <i class="bi bi-diagram-3-fill"></i>
-                    FabrikaTakipPaneli
+                    <span class="brand-mark">
+                        <svg viewBox="0 0 44 44" width="34" height="34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <polygon points="10,2 44,2 44,34 34,42 0,42 0,10" fill="none" stroke="currentColor" stroke-width="2" />
+                            <path d="M6 8 L30 34 L20 8 L12 34 L36 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </span>
+                    <span class="brand-text">
+                        <span class="brand-name">FabrikaTakip</span>
+                        <span class="brand-tagline">PANEL SİSTEMİ</span>
+                    </span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Menüyü aç/kapat">
@@ -70,6 +78,16 @@
                             </li>
                             @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
                             {
+                                <li class="nav-item">
+                                    <a class="nav-link app-nav-link @(IsActive("/Drivers") ? "active" : "")" asp-area="" asp-page="/Drivers/Index">
+                                        <i class="bi bi-person-badge"></i> Sürücüler
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link app-nav-link @(IsActive("/Vehicles") ? "active" : "")" asp-area="" asp-page="/Vehicles/Index">
+                                        <i class="bi bi-truck-front"></i> Araçlar
+                                    </a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link app-nav-link @(IsActive("/Admin") ? "active" : "")" asp-area="" asp-page="/Admin/Users/Index">
                                         <i class="bi bi-people"></i> Kullanıcılar

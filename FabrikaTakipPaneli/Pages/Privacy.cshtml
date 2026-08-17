@@ -1,8 +1,72 @@
-﻿@page
+@page
 @model PrivacyModel
 @{
     ViewData["Title"] = "Gizlilik Politikası";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Bu sayfa, sitenizin gizlilik politikasını açıklamak için kullanılabilir.</p>
+<h1><i class="bi bi-shield-lock"></i> Gizlilik Politikası</h1>
+
+<div class="panel" style="max-width: 860px;">
+<div class="panel-body">
+
+<div class="alert alert-warning" role="alert">
+    <i class="bi bi-info-circle"></i>
+    Bu uygulama bir <strong>demo/portfolyo projesidir</strong>. Aşağıdaki metin, gerçek bir
+    ticari ürünün gizlilik politikasını örneklemek amacıyla yazılmış standart bir şablondur ve
+    hukuki danışmanlık niteliği taşımaz. Lütfen bu sisteme gerçek/hassas kişisel verilerinizi
+    girmeyiniz.
+</div>
+
+<h2 class="h4 mt-4">1. Hangi Veriler Toplanıyor?</h2>
+<p>FabrikaTakipPaneli, uygulamanın işlevini yerine getirebilmesi için aşağıdaki verileri saklar:</p>
+<ul>
+    <li><strong>Hesap bilgileri:</strong> e-posta adresiniz ve şifrenizin geri döndürülemeyecek
+        şekilde saklanan hash (özet) değeri. Şifrenizin okunabilir hâli hiçbir zaman saklanmaz.</li>
+    <li><strong>Rol ve yetki bilgisi:</strong> hesabınıza atanmış Admin/Personel rolü.</li>
+    <li><strong>Uygulama içi kayıtlar:</strong> girdiğiniz ürün, stok hareketi ve sevkiyat
+        kayıtları (ör. miktar, birim fiyat, varış yeri, sürücü/araç bilgisi) ve bu kayıtları
+        hangi kullanıcının, ne zaman oluşturduğu.</li>
+    <li><strong>Teknik veriler:</strong> oturum açma zamanı gibi standart sunucu günlükleri.</li>
+</ul>
+
+<h2 class="h4 mt-4">2. Veriler Nasıl Kullanılıyor?</h2>
+<p>
+    Toplanan tüm veriler yalnızca <strong>uygulamanın temel işlevlerini</strong> sağlamak için
+    kullanılır: oturum açma/kimlik doğrulama, stok ve sevkiyat takibinin yapılması, raporların
+    (ör. sevkiyat PDF'i) oluşturulması ve yetkilendirme kontrolü. Veriler pazarlama, profilleme
+    veya reklam amacıyla işlenmez.
+</p>
+
+<h2 class="h4 mt-4">3. Üçüncü Taraflarla Paylaşım</h2>
+<p>
+    Verileriniz hiçbir üçüncü taraf ile <strong>paylaşılmaz, satılmaz veya kiralanmaz</strong>.
+    Uygulama kendi veritabanı dışında herhangi bir dış servise veri göndermez.
+</p>
+
+<h2 class="h4 mt-4">4. Verilerin Saklanması ve Güvenliği</h2>
+<p>
+    Şifreler endüstri standardı bir algoritma ile hash'lenerek saklanır. Veritabanına erişim,
+    yalnızca uygulamanın kendisi ve yetkili yöneticiler ile sınırlıdır. Buna rağmen, bu projenin
+    bir demo ortamı olması nedeniyle üretim seviyesinde güvenlik garantisi verilmemektedir.
+</p>
+
+<h2 class="h4 mt-4">5. Hesabınızı Silme Hakkınız</h2>
+<p>
+    Hesabınızın ve hesabınızla ilişkili kişisel verilerin silinmesini istediğinizde, sistem
+    yöneticisinden (Admin) hesabınızın kaldırılmasını talep edebilirsiniz. Talebiniz makul bir
+    süre içinde değerlendirilerek hesabınız ve size ait kişisel bilgiler sistemden silinir;
+    yasal/işlevsel zorunluluk nedeniyle saklanması gereken işlem kayıtları (ör. geçmiş stok
+    hareketleri) anonimleştirilebilir.
+</p>
+
+<h2 class="h4 mt-4">6. İletişim</h2>
+<p>
+    Gizlilikle ilgili sorularınız için sistem yöneticinizle iletişime geçebilirsiniz.
+</p>
+
+<p class="text-muted mt-4 mb-0">
+    <small>Son güncelleme: @DateTime.Today.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</small>
+</p>
+
+</div>
+</div>

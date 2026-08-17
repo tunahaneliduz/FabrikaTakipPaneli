@@ -9,10 +9,9 @@
 {
     var isAdmin = User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin);
     var canEnterStock = isAdmin || User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Personel);
-    var today = DateTime.Today.ToString("yyyy-MM-dd");
 
     <div class="welcome-bar">
-        <h1>Genel Bakış</h1>
+        <h1>Durum Özeti</h1>
         <div class="welcome-meta">
             <span><i class="bi bi-calendar3"></i>@DateTime.Today.ToString("dd MMMM yyyy dddd", new System.Globalization.CultureInfo("tr-TR"))</span>
             <span>
@@ -30,38 +29,18 @@
         </div>
     </div>
 
-    <div class="row g-3 mb-4">
-        <div class="col-sm-6 col-lg-4">
-            <a asp-page="/Products/Index" class="kpi-card kpi-accent">
-                <div class="kpi-icon"><i class="bi bi-box-seam"></i></div>
-                <div>
-                    <div class="kpi-value font-mono">@Model.TotalProductCount</div>
-                    <div class="kpi-label">Toplam Ürün</div>
-                </div>
-                <i class="bi bi-chevron-right kpi-arrow"></i>
-            </a>
-        </div>
-        <div class="col-sm-6 col-lg-4">
-            <a asp-page="/Dashboard/Index" class="kpi-card @(Model.CriticalStockProductCount > 0 ? "kpi-danger" : "kpi-neutral")">
-                <div class="kpi-icon"><i class="bi bi-exclamation-triangle"></i></div>
-                <div>
-                    <div class="kpi-value font-mono">@Model.CriticalStockProductCount</div>
-                    <div class="kpi-label">Kritik Stoklu Ürün</div>
-                </div>
-                <i class="bi bi-chevron-right kpi-arrow"></i>
-            </a>
-        </div>
-        <div class="col-sm-6 col-lg-4">
-            <a asp-page="/StockEntries/Index" asp-route-StartDate="@today" asp-route-EndDate="@today" class="kpi-card kpi-info">
-                <div class="kpi-icon"><i class="bi bi-calendar-check"></i></div>
-                <div>
-                    <div class="kpi-value font-mono">@Model.TodayEntryCount</div>
-                    <div class="kpi-label">Bugünkü Hareket</div>
-                </div>
-                <i class="bi bi-chevron-right kpi-arrow"></i>
-            </a>
-        </div>
-    </div>
+    <p class="status-summary">
+        Sistemde <span class="status-figure status-figure-neutral font-mono">@Model.TotalProductCount</span> ürün takip ediliyor.
+        Bugün <span class="status-figure status-figure-accent font-mono">@Model.TodayEntryCount</span> stok hareketi kaydedildi.
+        @if (Model.CriticalStockProductCount > 0)
+        {
+            <text>Kritik seviyede <span class="status-figure status-figure-accent font-mono">@Model.CriticalStockProductCount</span> ürün var, kontrol gerekiyor.</text>
+        }
+        else
+        {
+            <text>Kritik seviyede ürün: <span class="status-figure status-figure-positive font-mono">@Model.CriticalStockProductCount</span>.</text>
+        }
+    </p>
 
     <div class="quick-actions">
         @if (isAdmin)
@@ -105,7 +84,7 @@
                                 }
                                 else
                                 {
-                                    <span class="badge text-bg-warning"><i class="bi bi-arrow-up-right"></i> Çıkış</span>
+                                    <span class="badge text-bg-primary"><i class="bi bi-arrow-up-right"></i> Çıkış</span>
                                 }
                             </td>
                             <td class="text-end font-mono">@e.Quantity.ToString("N2")</td>

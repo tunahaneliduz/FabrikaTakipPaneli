@@ -16,6 +16,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     public DbSet<StockEntry> StockEntries => Set<StockEntry>();
     public DbSet<Shipment> Shipments => Set<Shipment>();
     public DbSet<ShipmentSequence> ShipmentSequences => Set<ShipmentSequence>();
+    public DbSet<Driver> Drivers => Set<Driver>();
+    public DbSet<Vehicle> Vehicles => Set<Vehicle>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -49,5 +51,25 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
             .WithOne(e => e.Shipment)
             .HasForeignKey<Shipment>(s => s.StockEntryId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Shipment>()
+            .HasOne(s => s.Driver)
+            .WithMany(d => d.Shipments)
+            .HasForeignKey(s => s.DriverId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Shipment>()
+            .HasOne(s => s.Vehicle)
+            .WithMany(v => v.Shipments)
+            .HasForeignKey(s => s.VehicleId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Driver>()
+            .HasIndex(d => d.TCKimlikNo)
+            .IsUnique();
+
+        builder.Entity<Vehicle>()
+            .HasIndex(v => v.PlateNumber)
+            .IsUnique();
     }
 }

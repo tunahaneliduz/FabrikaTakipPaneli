@@ -8,44 +8,19 @@
 
 <h1>Dashboard</h1>
 
-<div class="row g-3 mb-4">
-    <div class="col-sm-6 col-lg-3">
-        <div class="kpi-card kpi-accent">
-            <div class="kpi-icon"><i class="bi bi-box-seam"></i></div>
-            <div>
-                <div class="kpi-value font-mono">@Model.TotalProductCount</div>
-                <div class="kpi-label">Toplam Ürün Sayısı</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-lg-3">
-        <div class="kpi-card kpi-neutral">
-            <div class="kpi-icon"><i class="bi bi-arrow-left-right"></i></div>
-            <div>
-                <div class="kpi-value font-mono">@Model.TotalStockEntryCount</div>
-                <div class="kpi-label">Toplam Stok Hareketi</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-lg-3">
-        <div class="kpi-card kpi-info">
-            <div class="kpi-icon"><i class="bi bi-calendar-check"></i></div>
-            <div>
-                <div class="kpi-value font-mono">@Model.TodayEntryCount</div>
-                <div class="kpi-label">Bugünkü Hareket Sayısı</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-lg-3">
-        <div class="kpi-card kpi-danger">
-            <div class="kpi-icon"><i class="bi bi-exclamation-triangle"></i></div>
-            <div>
-                <div class="kpi-value font-mono">@Model.CriticalStockProductCount</div>
-                <div class="kpi-label">Kritik Stoklu Ürün (Min Eşik Altı)</div>
-            </div>
-        </div>
-    </div>
-</div>
+<p class="status-summary">
+    Sistemde <span class="status-figure status-figure-neutral font-mono">@Model.TotalProductCount</span> ürün takip ediliyor,
+    toplam <span class="status-figure status-figure-neutral font-mono">@Model.TotalStockEntryCount</span> stok hareketi kaydı bulunuyor.
+    Bugün <span class="status-figure status-figure-accent font-mono">@Model.TodayEntryCount</span> hareket kaydedildi.
+    @if (Model.CriticalStockProductCount > 0)
+    {
+        <text>Kritik seviyede <span class="status-figure status-figure-accent font-mono">@Model.CriticalStockProductCount</span> ürün var, kontrol gerekiyor.</text>
+    }
+    else
+    {
+        <text>Kritik seviyede ürün: <span class="status-figure status-figure-positive font-mono">@Model.CriticalStockProductCount</span>.</text>
+    }
+</p>
 
 <div class="row g-3 mb-4">
     <div class="col-12">
@@ -150,7 +125,7 @@
                                     }
                                     else
                                     {
-                                        <span class="badge text-bg-warning">Çıkış</span>
+                                        <span class="badge text-bg-primary">Çıkış</span>
                                     }
                                 </td>
                                 <td class="text-end font-mono">@e.Quantity.ToString("N2")</td>
