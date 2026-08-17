@@ -21,6 +21,9 @@ public class IndexModel : PageModel
     public string? SearchTerm { get; set; }
 
     [BindProperty(SupportsGet = true)]
+    public string? Location { get; set; }
+
+    [BindProperty(SupportsGet = true)]
     public int PageIndex { get; set; } = 1;
 
     public int TotalPages { get; set; }
@@ -34,6 +37,11 @@ public class IndexModel : PageModel
         if (!string.IsNullOrWhiteSpace(SearchTerm))
         {
             query = query.Where(p => EF.Functions.Like(p.Name, $"%{SearchTerm}%"));
+        }
+
+        if (!string.IsNullOrWhiteSpace(Location))
+        {
+            query = query.Where(p => p.Location == Location);
         }
 
         var totalCount = await query.CountAsync();

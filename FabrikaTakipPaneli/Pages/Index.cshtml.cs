@@ -9,6 +9,16 @@ public class IndexModel : PageModel
 {
     private const int RecentEntriesCount = 5;
 
+    private static readonly string[] FacilityProductZones =
+    {
+        "Ambar",
+        "Ham Yağ Tankları",
+        "Margarin Dolum",
+        "Küspe Deposu",
+        "Yem Deposu",
+        "Likit Dolum"
+    };
+
     private readonly ApplicationDbContext _context;
 
     public IndexModel(ApplicationDbContext context)
@@ -22,6 +32,10 @@ public class IndexModel : PageModel
     public DateTime? LastUpdateAt { get; set; }
 
     public IList<RecentEntryItem> RecentEntries { get; set; } = new List<RecentEntryItem>();
+
+    public IDictionary<string, List<FacilityZoneProductItem>> FacilityZoneProducts { get; set; } =
+        new Dictionary<string, List<FacilityZoneProductItem>>();
+    public IList<FacilityShipmentItem> FacilityActiveShipments { get; set; } = new List<FacilityShipmentItem>();
 
     public async Task OnGetAsync()
     {
@@ -60,6 +74,44 @@ public class IndexModel : PageModel
                 UserName = s.User!.UserName
             })
             .ToListAsync();
+
+        var productStocks = await _context.Products
+            .Select(p => new
+            {
+                p.Name,
+                p.Unit,
+                p.Location,
+                CurrentStock = p.StockEntries.Sum(s => s.Type == StockEntryType.In ? s.Quantity : -s.Quantity)
+            })
+            .ToListAsync();
+
+        FacilityZoneProducts = FacilityProductZones.ToDictionary(
+            zone => zone,
+            zone => productStocks
+                .Where(p => string.Equals(p.Location?.Trim(), zone, StringComparison.OrdinalIgnoreCase))
+                .Select(p => new FacilityZoneProductItem
+                {
+                    Name = p.Name,
+                    Unit = p.Unit,
+                    CurrentStock = p.CurrentStock
+                })
+                .ToList());
+
+        var shipments = await _context.Shipments
+            .Include(s => s.StockEntry)
+            .ThenInclude(e => e!.Product)
+            .ToListAsync();
+
+        FacilityActiveShipments = shipments
+            .Select(s => new { s.Destination, ProductName = s.StockEntry?.Product?.Name, Status = s.EffectiveStatus })
+            .Where(s => s.Status == ShipmentStatus.Yolda || s.Status == ShipmentStatus.TeslimEdiliyor)
+            .Select(s => new FacilityShipmentItem
+            {
+                ProductName = string.IsNullOrWhiteSpace(s.ProductName) ? "Belirtilmemiş ürün" : s.ProductName,
+                Destination = s.Destination,
+                Status = s.Status
+            })
+            .ToList();
     }
 
     public class RecentEntryItem
@@ -69,5 +121,19 @@ public class IndexModel : PageModel
         public decimal Quantity { get; set; }
         public DateTime EntryDate { get; set; }
         public string? UserName { get; set; }
+    }
+
+    public class FacilityZoneProductItem
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Unit { get; set; } = string.Empty;
+        public decimal CurrentStock { get; set; }
+    }
+
+    public class FacilityShipmentItem
+    {
+        public string ProductName { get; set; } = string.Empty;
+        public string Destination { get; set; } = string.Empty;
+        public ShipmentStatus Status { get; set; }
     }
 }

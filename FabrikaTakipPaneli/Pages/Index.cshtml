@@ -1,8 +1,56 @@
 @page
 @model IndexModel
+@using System.Text.Json
 @using FabrikaTakipPaneli.Models
 @{
     ViewData["Title"] = "Ana Sayfa";
+
+    var facilityZones = new (string Name, double Left, double Top, double Width, double Height)[]
+    {
+        ("Ambar", 10, 8, 30, 32),
+        ("Ham Yağ Tankları", 40, 8, 24, 27),
+        ("Margarin Dolum", 65, 8, 28, 30),
+        ("Küspe Deposu", 32, 38, 32, 22),
+        ("Yem Deposu", 65, 40, 28, 20),
+        ("Likit Dolum", 8, 62, 25, 26),
+        ("Sevkiyat", 65, 62, 28, 26),
+    };
+
+    var facilityZoneData = new Dictionary<string, object>();
+    foreach (var zone in facilityZones)
+    {
+        if (zone.Name == "Sevkiyat")
+        {
+            facilityZoneData[zone.Name] = new
+            {
+                type = "shipments",
+                link = "/Shipments?StatusFilter=Yolda",
+                linkLabel = "Sevkiyatları Gör",
+                items = Model.FacilityActiveShipments.Select(s => new
+                {
+                    product = s.ProductName,
+                    destination = s.Destination,
+                    status = s.Status.ToDisplayLabel()
+                })
+            };
+        }
+        else
+        {
+            var products = Model.FacilityZoneProducts.TryGetValue(zone.Name, out var list) ? list : new();
+            facilityZoneData[zone.Name] = new
+            {
+                type = "products",
+                link = $"/Products?Location={Uri.EscapeDataString(zone.Name)}",
+                linkLabel = "Ürünleri Gör",
+                items = products.Select(p => new
+                {
+                    name = p.Name,
+                    stock = p.CurrentStock.ToString("N2"),
+                    unit = p.Unit
+                })
+            };
+        }
+    }
 }
 
 @if (User.Identity?.IsAuthenticated == true)
@@ -55,45 +103,73 @@
         }
     </div>
 
-    <div class="panel">
-        <div class="panel-header"><i class="bi bi-clock-history me-1"></i> Son Stok Hareketleri</div>
-        <div class="table-responsive">
-            <table class="table table-sm mb-0">
-                <thead>
-                    <tr>
-                        <th>Ürün</th>
-                        <th>Tip</th>
-                        <th class="text-end">Miktar</th>
-                        <th>Tarih</th>
-                        <th class="d-none d-sm-table-cell">Kullanıcı</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.RecentEntries.Count == 0)
-                    {
-                        <tr><td colspan="5" class="data-card-empty">Hareket bulunamadı.</td></tr>
-                    }
-                    @foreach (var e in Model.RecentEntries)
-                    {
-                        <tr>
-                            <td>@e.ProductName</td>
-                            <td>
-                                @if (e.Type == StockEntryType.In)
-                                {
-                                    <span class="badge text-bg-success"><i class="bi bi-arrow-down-left"></i> Giriş</span>
-                                }
-                                else
-                                {
-                                    <span class="badge text-bg-primary"><i class="bi bi-arrow-up-right"></i> Çıkış</span>
-                                }
-                            </td>
-                            <td class="text-end font-mono">@e.Quantity.ToString("N2")</td>
-                            <td class="font-mono">@e.EntryDate.ToString("dd.MM.yyyy HH:mm")</td>
-                            <td class="d-none d-sm-table-cell">@e.UserName</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+    <div class="row g-3">
+        <div class="col-12 col-lg-7">
+            <div class="panel h-100">
+                <div class="panel-header"><i class="bi bi-map me-1"></i> Tesis Haritası</div>
+                <div class="panel-body p-0">
+                    <div class="facility-map" id="facilityMap">
+                        <img src="~/images/tesis-haritasi.png" alt="Tesis Haritası" class="facility-map-img" width="1448" height="1086" />
+                        @foreach (var zone in facilityZones)
+                        {
+                            <div class="facility-zone"
+                                 data-zone="@zone.Name"
+                                 tabindex="0"
+                                 role="button"
+                                 aria-label="@zone.Name"
+                                 style="left:@(zone.Left.ToString(System.Globalization.CultureInfo.InvariantCulture))%; top:@(zone.Top.ToString(System.Globalization.CultureInfo.InvariantCulture))%; width:@(zone.Width.ToString(System.Globalization.CultureInfo.InvariantCulture))%; height:@(zone.Height.ToString(System.Globalization.CultureInfo.InvariantCulture))%;">
+                            </div>
+                        }
+                        <div class="facility-popover" id="facilityPopover" role="tooltip">
+                            <div class="facility-popover-title" id="facilityPopoverTitle"></div>
+                            <ul class="facility-popover-list" id="facilityPopoverList"></ul>
+                            <a class="facility-popover-link" id="facilityPopoverLink" href="#"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-5">
+            <div class="panel h-100">
+                <div class="panel-header"><i class="bi bi-clock-history me-1"></i> Son Stok Hareketleri</div>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Ürün</th>
+                                <th>Tip</th>
+                                <th class="text-end">Miktar</th>
+                                <th>Tarih</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RecentEntries.Count == 0)
+                            {
+                                <tr><td colspan="4" class="data-card-empty">Hareket bulunamadı.</td></tr>
+                            }
+                            @foreach (var e in Model.RecentEntries)
+                            {
+                                <tr>
+                                    <td>@e.ProductName</td>
+                                    <td>
+                                        @if (e.Type == StockEntryType.In)
+                                        {
+                                            <span class="badge text-bg-success"><i class="bi bi-arrow-down-left"></i> Giriş</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge text-bg-primary"><i class="bi bi-arrow-up-right"></i> Çıkış</span>
+                                        }
+                                    </td>
+                                    <td class="text-end font-mono">@e.Quantity.ToString("N2")</td>
+                                    <td class="font-mono">@e.EntryDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 }
@@ -161,4 +237,143 @@ else
             </div>
         </div>
     </div>
+}
+
+@section Scripts {
+    <script>
+        const facilityZoneData = @Html.Raw(JsonSerializer.Serialize(facilityZoneData));
+
+        (function () {
+            const map = document.getElementById('facilityMap');
+            if (!map) return;
+
+            const popover = document.getElementById('facilityPopover');
+            const popoverTitle = document.getElementById('facilityPopoverTitle');
+            const popoverList = document.getElementById('facilityPopoverList');
+            const popoverLink = document.getElementById('facilityPopoverLink');
+            const zones = map.querySelectorAll('.facility-zone');
+            const MAX_ROWS = 8;
+            let activeZone = null;
+
+            function renderContent(zoneName) {
+                const data = facilityZoneData[zoneName];
+                popoverTitle.textContent = zoneName;
+                popoverList.innerHTML = '';
+
+                if (!data || !data.items || data.items.length === 0) {
+                    const li = document.createElement('li');
+                    li.className = 'facility-popover-empty';
+                    li.textContent = data && data.type === 'shipments'
+                        ? 'Şu an yolda sevkiyat yok'
+                        : 'Bu bölümde kayıtlı ürün yok';
+                    popoverList.appendChild(li);
+                    return;
+                }
+
+                const items = data.items.slice(0, MAX_ROWS);
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    if (data.type === 'shipments') {
+                        li.textContent = `${item.product} → ${item.destination} (${item.status})`;
+                    } else {
+                        li.textContent = `${item.name} — ${item.stock} ${item.unit}`;
+                    }
+                    popoverList.appendChild(li);
+                });
+
+                if (data.items.length > MAX_ROWS) {
+                    const li = document.createElement('li');
+                    li.className = 'facility-popover-more';
+                    li.textContent = `+${data.items.length - MAX_ROWS} daha`;
+                    popoverList.appendChild(li);
+                }
+            }
+
+            function renderLink(zoneName) {
+                const data = facilityZoneData[zoneName];
+                if (data && data.link) {
+                    popoverLink.href = data.link;
+                    popoverLink.textContent = data.linkLabel || 'Detayları Gör';
+                    popoverLink.style.display = 'block';
+                } else {
+                    popoverLink.style.display = 'none';
+                }
+            }
+
+            function positionPopover(zoneEl) {
+                const mapRect = map.getBoundingClientRect();
+                const zoneRect = zoneEl.getBoundingClientRect();
+
+                popover.style.display = 'block';
+                const popRect = popover.getBoundingClientRect();
+
+                let top = (zoneRect.bottom - mapRect.top) + 8;
+                if (zoneRect.bottom + popRect.height + 8 > window.innerHeight) {
+                    top = (zoneRect.top - mapRect.top) - popRect.height - 8;
+                }
+
+                let left = (zoneRect.left - mapRect.left) + (zoneRect.width / 2) - (popRect.width / 2);
+                left = Math.max(8, Math.min(left, mapRect.width - popRect.width - 8));
+                top = Math.max(8, Math.min(top, mapRect.height - popRect.height - 8));
+
+                popover.style.left = `${left}px`;
+                popover.style.top = `${top}px`;
+            }
+
+            function showZone(zoneEl) {
+                const zoneName = zoneEl.dataset.zone;
+                renderContent(zoneName);
+                renderLink(zoneName);
+                activeZone = zoneEl;
+                positionPopover(zoneEl);
+                popover.classList.add('visible');
+            }
+
+            function hideZone() {
+                popover.classList.remove('visible');
+                popover.style.display = 'none';
+                activeZone = null;
+            }
+
+            let hideTimer = null;
+
+            function cancelHide() {
+                if (hideTimer) {
+                    clearTimeout(hideTimer);
+                    hideTimer = null;
+                }
+            }
+
+            function scheduleHide() {
+                cancelHide();
+                hideTimer = setTimeout(hideZone, 200);
+            }
+
+            zones.forEach(zoneEl => {
+                zoneEl.addEventListener('mouseenter', () => { cancelHide(); showZone(zoneEl); });
+                zoneEl.addEventListener('mouseleave', scheduleHide);
+                zoneEl.addEventListener('focus', () => { cancelHide(); showZone(zoneEl); });
+                zoneEl.addEventListener('blur', scheduleHide);
+                zoneEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (activeZone === zoneEl) {
+                        hideZone();
+                    } else {
+                        showZone(zoneEl);
+                    }
+                });
+            });
+
+            popover.addEventListener('mouseenter', cancelHide);
+            popover.addEventListener('mouseleave', scheduleHide);
+            popover.addEventListener('focusin', cancelHide);
+            popover.addEventListener('focusout', scheduleHide);
+            popover.addEventListener('click', (e) => e.stopPropagation());
+
+            document.addEventListener('click', () => hideZone());
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') hideZone();
+            });
+        })();
+    </script>
 }
