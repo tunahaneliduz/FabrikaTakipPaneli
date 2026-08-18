@@ -58,37 +58,37 @@
     var isAdmin = User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin);
     var canEnterStock = isAdmin || User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Personel);
 
-    <div class="welcome-bar">
-        <h1>Durum Özeti</h1>
-        <div class="welcome-meta">
-            <span><i class="bi bi-calendar3"></i>@DateTime.Today.ToString("dd MMMM yyyy dddd", new System.Globalization.CultureInfo("tr-TR"))</span>
-            <span>
-                <i class="bi bi-arrow-repeat"></i>
-                Son veri güncellemesi:
-                @if (Model.LastUpdateAt.HasValue)
-                {
-                    <span class="font-mono">@Model.LastUpdateAt.Value.ToString("dd.MM.yyyy HH:mm")</span>
-                }
-                else
-                {
-                    <span>henüz veri yok</span>
-                }
-            </span>
+    <div class="page-heading">
+        <div>
+            <span class="page-kicker">Operasyon özeti</span>
+            <h1>Günaydın, üretim merkezi</h1>
+            <p>Tesis, stok ve sevkiyat operasyonlarının güncel durumunu tek bakışta izleyin.</p>
         </div>
+        <span class="page-date-badge"><i class="bi bi-calendar3"></i>@DateTime.Today.ToString("dd MMMM yyyy, dddd", new System.Globalization.CultureInfo("tr-TR"))</span>
     </div>
 
-    <p class="status-summary">
-        Sistemde <span class="status-figure status-figure-neutral font-mono">@Model.TotalProductCount</span> ürün takip ediliyor.
-        Bugün <span class="status-figure status-figure-accent font-mono">@Model.TodayEntryCount</span> stok hareketi kaydedildi.
-        @if (Model.CriticalStockProductCount > 0)
-        {
-            <text>Kritik seviyede <span class="status-figure status-figure-accent font-mono">@Model.CriticalStockProductCount</span> ürün var, kontrol gerekiyor.</text>
-        }
-        else
-        {
-            <text>Kritik seviyede ürün: <span class="status-figure status-figure-positive font-mono">@Model.CriticalStockProductCount</span>.</text>
-        }
-    </p>
+    <section class="kpi-grid" aria-label="Operasyon göstergeleri">
+        <article class="kpi-card kpi-neutral">
+            <div class="kpi-topline"><span class="kpi-label">Toplam ürün</span><span class="kpi-icon"><i class="bi bi-box-seam"></i></span></div>
+            <strong class="kpi-value">@Model.TotalProductCount</strong>
+            <span class="kpi-meta">Aktif olarak takip edilen ürün</span>
+        </article>
+        <article class="kpi-card kpi-positive">
+            <div class="kpi-topline"><span class="kpi-label">Bugünkü hareket</span><span class="kpi-icon"><i class="bi bi-arrow-left-right"></i></span></div>
+            <strong class="kpi-value">@Model.TodayEntryCount</strong>
+            <span class="kpi-meta">Bugün kaydedilen stok hareketi</span>
+        </article>
+        <article class="kpi-card @(Model.CriticalStockProductCount > 0 ? "kpi-critical" : "kpi-positive")">
+            <div class="kpi-topline"><span class="kpi-label">Kritik stok</span><span class="kpi-icon"><i class="bi bi-exclamation-triangle"></i></span></div>
+            <strong class="kpi-value">@Model.CriticalStockProductCount</strong>
+            <span class="kpi-meta">Kontrol gerektiren ürün sayısı</span>
+        </article>
+        <article class="kpi-card">
+            <div class="kpi-topline"><span class="kpi-label">Son güncelleme</span><span class="kpi-icon"><i class="bi bi-arrow-repeat"></i></span></div>
+            <strong class="kpi-value kpi-time">@(Model.LastUpdateAt?.ToString("HH:mm") ?? "--:--")</strong>
+            <span class="kpi-meta">@(Model.LastUpdateAt?.ToString("dd.MM.yyyy") ?? "Henüz veri bulunmuyor")</span>
+        </article>
+    </section>
 
     <div class="quick-actions">
         @if (isAdmin)
@@ -106,7 +106,7 @@
     <div class="row g-3">
         <div class="col-12 col-lg-7">
             <div class="panel h-100">
-                <div class="panel-header"><i class="bi bi-map me-1"></i> Tesis Haritası</div>
+                <div class="panel-header"><i class="bi bi-map me-1"></i> Tesis Haritası<span class="panel-caption">Bölümlere göre ürün ve aktif sevkiyat görünümü</span></div>
                 <div class="panel-body p-0">
                     <div class="facility-map" id="facilityMap">
                         <img src="~/images/tesis-haritasi.png" alt="Tesis Haritası" class="facility-map-img" width="1448" height="1086" />
@@ -132,7 +132,7 @@
 
         <div class="col-12 col-lg-5">
             <div class="panel h-100">
-                <div class="panel-header"><i class="bi bi-clock-history me-1"></i> Son Stok Hareketleri</div>
+                <div class="panel-header"><i class="bi bi-clock-history me-1"></i> Son Stok Hareketleri<span class="panel-caption">En son kaydedilen beş operasyon</span></div>
                 <div class="table-responsive">
                     <table class="table table-sm mb-0">
                         <thead>

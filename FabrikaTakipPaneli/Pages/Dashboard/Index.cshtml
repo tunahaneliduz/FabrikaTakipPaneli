@@ -6,26 +6,42 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<h1>Dashboard</h1>
+<div class="page-heading">
+    <div>
+        <span class="page-kicker">Analitik görünüm</span>
+        <h1>Operasyon Dashboard’u</h1>
+        <p>Stok sağlığını, günlük hareketleri ve tesis bölümlerini gerçek zamanlı operasyon verileriyle değerlendirin.</p>
+    </div>
+    <a asp-page="/StockEntries/Create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Yeni Stok Hareketi</a>
+</div>
 
-<p class="status-summary">
-    Sistemde <span class="status-figure status-figure-neutral font-mono">@Model.TotalProductCount</span> ürün takip ediliyor,
-    toplam <span class="status-figure status-figure-neutral font-mono">@Model.TotalStockEntryCount</span> stok hareketi kaydı bulunuyor.
-    Bugün <span class="status-figure status-figure-accent font-mono">@Model.TodayEntryCount</span> hareket kaydedildi.
-    @if (Model.CriticalStockProductCount > 0)
-    {
-        <text>Kritik seviyede <span class="status-figure status-figure-accent font-mono">@Model.CriticalStockProductCount</span> ürün var, kontrol gerekiyor.</text>
-    }
-    else
-    {
-        <text>Kritik seviyede ürün: <span class="status-figure status-figure-positive font-mono">@Model.CriticalStockProductCount</span>.</text>
-    }
-</p>
+<section class="kpi-grid" aria-label="Dashboard göstergeleri">
+    <article class="kpi-card kpi-neutral">
+        <div class="kpi-topline"><span class="kpi-label">Toplam ürün</span><span class="kpi-icon"><i class="bi bi-box-seam"></i></span></div>
+        <strong class="kpi-value">@Model.TotalProductCount</strong>
+        <span class="kpi-meta">Portföyde takip edilen ürün</span>
+    </article>
+    <article class="kpi-card">
+        <div class="kpi-topline"><span class="kpi-label">Toplam hareket</span><span class="kpi-icon"><i class="bi bi-database"></i></span></div>
+        <strong class="kpi-value">@Model.TotalStockEntryCount</strong>
+        <span class="kpi-meta">Tüm zamanların stok kaydı</span>
+    </article>
+    <article class="kpi-card kpi-positive">
+        <div class="kpi-topline"><span class="kpi-label">Bugün</span><span class="kpi-icon"><i class="bi bi-activity"></i></span></div>
+        <strong class="kpi-value">@Model.TodayEntryCount</strong>
+        <span class="kpi-meta">Gün içinde gerçekleşen hareket</span>
+    </article>
+    <article class="kpi-card @(Model.CriticalStockProductCount > 0 ? "kpi-critical" : "kpi-positive")">
+        <div class="kpi-topline"><span class="kpi-label">Kritik stok</span><span class="kpi-icon"><i class="bi bi-exclamation-triangle"></i></span></div>
+        <strong class="kpi-value">@Model.CriticalStockProductCount</strong>
+        <span class="kpi-meta">Minimum seviyenin altındaki ürün</span>
+    </article>
+</section>
 
 <div class="row g-3 mb-4">
     <div class="col-12">
         <div class="panel">
-            <div class="panel-header"><i class="bi bi-geo-alt me-1"></i> Bölümlere Göre Stok</div>
+            <div class="panel-header"><i class="bi bi-geo-alt me-1"></i> Bölümlere Göre Stok<span class="panel-caption">Tesis alanlarının ürün ve kritik stok dağılımı</span></div>
             <div class="panel-body">
                 <div class="location-grid">
                     @if (Model.LocationSummaries.Count == 0)
@@ -58,7 +74,7 @@
 <div class="row g-3 mb-4">
     <div class="col-lg-6">
         <div class="panel h-100">
-            <div class="panel-header"><i class="bi bi-exclamation-diamond me-1"></i> Kritik Stok - En Düşük Stoklu Ürünler</div>
+            <div class="panel-header"><i class="bi bi-exclamation-diamond me-1"></i> Kritik Stok<span class="panel-caption">En düşük stok seviyesine sahip ürünler</span></div>
             <div class="table-responsive">
                 <table class="table table-sm mb-0">
                     <thead>
@@ -97,7 +113,7 @@
     </div>
     <div class="col-lg-6">
         <div class="panel h-100">
-            <div class="panel-header"><i class="bi bi-clock-history me-1"></i> Son Stok Hareketleri</div>
+            <div class="panel-header"><i class="bi bi-clock-history me-1"></i> Son Stok Hareketleri<span class="panel-caption">Operasyon akışındaki son kayıtlar</span></div>
             <div class="table-responsive">
                 <table class="table table-sm mb-0">
                     <thead>
@@ -143,7 +159,7 @@
 <div class="row g-3 mb-4">
     <div class="col-lg-6">
         <div class="panel h-100">
-            <div class="panel-header"><i class="bi bi-bar-chart me-1"></i> En Düşük Stoklu Ürünler (Grafik)</div>
+            <div class="panel-header"><i class="bi bi-bar-chart me-1"></i> Stok Seviyesi<span class="panel-caption">En düşük stoklu ürünlerin karşılaştırması</span></div>
             <div class="panel-body">
                 <canvas id="lowStockChart" height="220"></canvas>
             </div>
@@ -151,7 +167,7 @@
     </div>
     <div class="col-lg-6">
         <div class="panel h-100">
-            <div class="panel-header"><i class="bi bi-graph-up me-1"></i> Son @Model.TrendChartLabels.Count Günlük Giriş/Çıkış Trendi</div>
+            <div class="panel-header"><i class="bi bi-graph-up me-1"></i> Giriş / Çıkış Trendi<span class="panel-caption">Son @Model.TrendChartLabels.Count günlük hareket analizi</span></div>
             <div class="panel-body">
                 <canvas id="trendChart" height="220"></canvas>
             </div>

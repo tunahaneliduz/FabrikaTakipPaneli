@@ -21,17 +21,17 @@
     <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FabrikaTakipPaneli.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="app-shell">
     @{
         var currentPath = Context.Request.Path.Value ?? "";
         bool IsActive(string prefix) =>
             currentPath.Equals(prefix, StringComparison.OrdinalIgnoreCase) ||
             currentPath.StartsWith(prefix + "/", StringComparison.OrdinalIgnoreCase);
     }
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm app-navbar mb-4">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">
+    <div class="app-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+    <aside class="app-sidebar" id="appSidebar" aria-label="Ana navigasyon">
+        <div class="sidebar-header">
+            <a class="navbar-brand" asp-area="" asp-page="/Index">
                     <span class="brand-mark">
                         <svg viewBox="0 0 44 44" width="34" height="34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <polygon points="10,2 44,2 44,34 34,42 0,42 0,10" fill="none" stroke="currentColor" stroke-width="2" />
@@ -40,84 +40,85 @@
                     </span>
                     <span class="brand-text">
                         <span class="brand-name">FabrikaTakip</span>
-                        <span class="brand-tagline">PANEL SİSTEMİ</span>
+                        <span class="brand-tagline">OPERASYON MERKEZİ</span>
                     </span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Menüyü aç/kapat">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link app-nav-link @(currentPath == "/" || currentPath.Equals("/Index", StringComparison.OrdinalIgnoreCase) ? "active" : "")" asp-area="" asp-page="/Index">
-                                <i class="bi bi-house"></i> Ana Sayfa
-                            </a>
-                        </li>
+            </a>
+            <button class="sidebar-close" id="sidebarClose" type="button" aria-label="Menüyü kapat">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="sidebar-context">
+            <span class="context-indicator"></span>
+            <span><strong>Sistem çevrimiçi</strong><small>Fabrika yönetim paneli</small></span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-label">Genel</div>
+            <a class="app-nav-link @(currentPath == "/" || currentPath.Equals("/Index", StringComparison.OrdinalIgnoreCase) ? "active" : "")" asp-area="" asp-page="/Index">
+                <i class="bi bi-grid-1x2"></i><span>Ana Sayfa</span>
+            </a>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link app-nav-link @(IsActive("/Dashboard") ? "active" : "")" asp-area="" asp-page="/Dashboard/Index">
-                                    <i class="bi bi-speedometer2"></i> Dashboard
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link app-nav-link @(IsActive("/Products") ? "active" : "")" asp-area="" asp-page="/Products/Index">
-                                    <i class="bi bi-box-seam"></i> Ürünler
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link app-nav-link @(IsActive("/StockEntries") ? "active" : "")" asp-area="" asp-page="/StockEntries/Index">
-                                    <i class="bi bi-arrow-left-right"></i> Stok Hareketleri
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link app-nav-link @(IsActive("/Shipments") ? "active" : "")" asp-area="" asp-page="/Shipments/Index">
-                                    <i class="bi bi-truck"></i> Sevkiyatlar
-                                </a>
-                            </li>
+                            <a class="app-nav-link @(IsActive("/Dashboard") ? "active" : "")" asp-area="" asp-page="/Dashboard/Index">
+                                <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+                            </a>
+                            <div class="sidebar-label">Operasyon</div>
+                            <a class="app-nav-link @(IsActive("/Products") ? "active" : "")" asp-area="" asp-page="/Products/Index">
+                                <i class="bi bi-box-seam"></i><span>Ürünler</span>
+                            </a>
+                            <a class="app-nav-link @(IsActive("/StockEntries") ? "active" : "")" asp-area="" asp-page="/StockEntries/Index">
+                                <i class="bi bi-arrow-left-right"></i><span>Stok Hareketleri</span>
+                            </a>
+                            <a class="app-nav-link @(IsActive("/Shipments") ? "active" : "")" asp-area="" asp-page="/Shipments/Index">
+                                <i class="bi bi-truck"></i><span>Sevkiyatlar</span>
+                            </a>
                             @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link app-nav-link @(IsActive("/Drivers") ? "active" : "")" asp-area="" asp-page="/Drivers/Index">
-                                        <i class="bi bi-person-badge"></i> Sürücüler
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link app-nav-link @(IsActive("/Vehicles") ? "active" : "")" asp-area="" asp-page="/Vehicles/Index">
-                                        <i class="bi bi-truck-front"></i> Araçlar
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link app-nav-link @(IsActive("/Admin") ? "active" : "")" asp-area="" asp-page="/Admin/Users/Index">
-                                        <i class="bi bi-people"></i> Kullanıcılar
-                                    </a>
-                                </li>
+                                <div class="sidebar-label">Yönetim</div>
+                                <a class="app-nav-link @(IsActive("/Drivers") ? "active" : "")" asp-area="" asp-page="/Drivers/Index">
+                                    <i class="bi bi-person-badge"></i><span>Sürücüler</span>
+                                </a>
+                                <a class="app-nav-link @(IsActive("/Vehicles") ? "active" : "")" asp-area="" asp-page="/Vehicles/Index">
+                                    <i class="bi bi-truck-front"></i><span>Araçlar</span>
+                                </a>
+                                <a class="app-nav-link @(IsActive("/Admin") ? "active" : "")" asp-area="" asp-page="/Admin/Users/Index">
+                                    <i class="bi bi-people"></i><span>Kullanıcılar</span>
+                                </a>
                             }
                         }
-                    </ul>
-                    <div class="d-flex align-items-center gap-2">
-                        <partial name="_LoginPartial" />
-                        <button id="themeToggle" type="button" class="theme-toggle" title="Tema değiştir" aria-label="Tema değiştir">
-                            <i class="bi bi-sun"></i>
-                            <i class="bi bi-moon-stars"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
         </nav>
-    </header>
-    <div class="container app-main">
-        <main role="main">
+        <div class="sidebar-footer">
+            <span class="sidebar-footer-label">Trakya Birlik</span>
+            <span class="sidebar-footer-meta">Üretim &amp; Lojistik</span>
+        </div>
+    </aside>
+
+    <div class="app-workspace">
+        <header class="app-topbar">
+            <button class="sidebar-trigger" id="sidebarTrigger" type="button" aria-controls="appSidebar" aria-expanded="false" aria-label="Menüyü aç">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="topbar-heading">
+                <span class="topbar-eyebrow">Fabrika Takip Paneli</span>
+                <strong>@ViewData["Title"]</strong>
+            </div>
+            <div class="topbar-actions">
+                <span class="topbar-date"><i class="bi bi-calendar3"></i>@DateTime.Today.ToString("dd MMM yyyy")</span>
+                <button id="themeToggle" type="button" class="theme-toggle" title="Tema değiştir" aria-label="Tema değiştir">
+                    <i class="bi bi-sun"></i>
+                    <i class="bi bi-moon-stars"></i>
+                </button>
+                <partial name="_LoginPartial" />
+            </div>
+        </header>
+        <main class="app-main" role="main">
             @RenderBody()
         </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - FabrikaTakipPaneli - <a asp-area="" asp-page="/Privacy">Gizlilik</a>
-        </div>
-    </footer>
+        <footer class="app-footer">
+            <span>&copy; 2026 FabrikaTakipPaneli</span>
+            <a asp-area="" asp-page="/Privacy">Gizlilik</a>
+        </footer>
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

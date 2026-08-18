@@ -4,8 +4,12 @@
     ViewData["Title"] = "Ürünler";
 }
 
-<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-    <h1 class="mb-0">Ürünler</h1>
+<div class="page-heading">
+    <div>
+        <span class="page-kicker">Stok kataloğu</span>
+        <h1>Ürünler</h1>
+        <p>Ürün tanımlarını, tesis konumlarını, fiyatları ve güncel stok seviyelerini yönetin.</p>
+    </div>
     @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
     {
         <a asp-page="Create" class="btn btn-primary">
@@ -14,66 +18,75 @@
     }
 </div>
 
-<form method="get" class="row row-cols-lg-auto g-2 align-items-center mb-3">
-    <div class="col-12">
+<form method="get" class="filter-toolbar">
+    <div class="search-field">
         <div class="input-group">
             <span class="input-group-text"><i class="bi bi-search"></i></span>
-            <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Ürün adına göre ara..." />
+            <input type="search" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Ürün adına göre ara..." aria-label="Ürün ara" />
         </div>
     </div>
     <input type="hidden" name="Location" value="@Model.Location" />
-    <div class="col-12">
-        <button type="submit" class="btn btn-outline-secondary">Ara</button>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Ara</button>
         <a asp-page="Index" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i> Temizle</a>
     </div>
 </form>
 
 @if (!string.IsNullOrWhiteSpace(Model.Location))
 {
-    <div class="alert alert-info d-flex justify-content-between align-items-center py-2 px-3 mb-3">
+    <div class="alert active-filter d-flex justify-content-between align-items-center py-2 px-3 mb-3">
         <span><i class="bi bi-geo-alt"></i> Konuma göre filtrelendi: <strong>@Model.Location</strong></span>
         <a asp-page="Index" asp-route-SearchTerm="@Model.SearchTerm" class="btn btn-sm btn-outline-secondary"><i class="bi bi-x-lg"></i> Filtreyi Kaldır</a>
     </div>
 }
 
-<div class="data-card">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Ad</th>
-                <th>Birim</th>
-                <th>Kategori</th>
-                <th>Konum</th>
-                <th class="text-end">Birim Fiyat</th>
-                <th class="text-end">Mevcut Stok</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Products.Count == 0)
-            {
-                <tr><td colspan="7" class="data-card-empty">Ürün bulunamadı.</td></tr>
-            }
-            @foreach (var product in Model.Products)
-            {
+<div class="data-card modern-table-card">
+    <div class="table-card-head">
+        <strong><i class="bi bi-boxes me-2"></i>Ürün listesi</strong>
+        <span>Bu sayfada @Model.Products.Count kayıt</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
                 <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Unit</td>
-                    <td>@product.Category</td>
-                    <td>@product.Location</td>
-                    <td class="text-end font-mono">@product.UnitPrice.ToString("N2")</td>
-                    <td class="text-end font-mono">@product.CurrentStock.ToString("N2")</td>
-                    <td class="text-end">
-                        @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
-                        {
-                            <a asp-page="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-outline-secondary" title="Düzenle"><i class="bi bi-pencil"></i></a>
-                            <a asp-page="Delete" asp-route-id="@product.Id" class="btn btn-sm btn-outline-danger" title="Sil"><i class="bi bi-trash"></i></a>
-                        }
-                    </td>
+                    <th>Ürün</th>
+                    <th>Kategori</th>
+                    <th>Konum</th>
+                    <th class="text-end">Birim Fiyat</th>
+                    <th class="text-end">Mevcut Stok</th>
+                    <th class="text-end"><span class="visually-hidden">İşlemler</span></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @if (Model.Products.Count == 0)
+                {
+                    <tr><td colspan="6" class="data-card-empty"><i class="bi bi-inbox d-block fs-3 mb-2"></i>Arama ölçütlerine uygun ürün bulunamadı.</td></tr>
+                }
+                @foreach (var product in Model.Products)
+                {
+                    <tr>
+                        <td class="product-name-cell">
+                            <strong>@product.Name</strong>
+                            <small>Birim: @product.Unit</small>
+                        </td>
+                        <td>@(string.IsNullOrWhiteSpace(product.Category) ? "—" : product.Category)</td>
+                        <td><span class="location-pill"><i class="bi bi-geo-alt"></i>@(string.IsNullOrWhiteSpace(product.Location) ? "Belirtilmemiş" : product.Location)</span></td>
+                        <td class="text-end font-mono">@product.UnitPrice.ToString("N2") ₺</td>
+                        <td class="text-end"><span class="stock-pill @(product.CurrentStock <= 0 ? "is-empty" : "")"><i class="bi @(product.CurrentStock <= 0 ? "bi-exclamation-circle" : "bi-check-circle")"></i><span class="font-mono">@product.CurrentStock.ToString("N2")</span> @product.Unit</span></td>
+                        <td class="text-end">
+                            @if (User.IsInRole(FabrikaTakipPaneli.Authorization.AppRoles.Admin))
+                            {
+                                <span class="table-actions">
+                                    <a asp-page="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-outline-secondary" title="Düzenle" aria-label="@product.Name ürününü düzenle"><i class="bi bi-pencil"></i></a>
+                                    <a asp-page="Delete" asp-route-id="@product.Id" class="btn btn-sm btn-outline-danger" title="Sil" aria-label="@product.Name ürününü sil"><i class="bi bi-trash"></i></a>
+                                </span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <partial name="_Pagination" model="@(new FabrikaTakipPaneli.Pages.Shared.PaginationViewModel
