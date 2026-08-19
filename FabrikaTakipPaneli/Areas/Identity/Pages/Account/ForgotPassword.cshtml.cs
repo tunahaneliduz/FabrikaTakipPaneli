@@ -46,6 +46,7 @@ namespace FabrikaTakipPaneli.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [EmailAddress]
+            [Display(Name = "E-posta")]
             public string Email { get; set; }
         }
 
@@ -72,8 +73,8 @@ namespace FabrikaTakipPaneli.Areas.Identity.Pages.Account
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Şifrenizi Sıfırlayın",
+                    $"Şifrenizi sıfırlamak için <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>buraya tıklayın</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

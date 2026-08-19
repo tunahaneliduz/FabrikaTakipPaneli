@@ -66,6 +66,7 @@ namespace FabrikaTakipPaneli.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [EmailAddress]
+            [Display(Name = "E-posta")]
             public string Email { get; set; }
 
             /// <summary>
@@ -74,13 +75,14 @@ namespace FabrikaTakipPaneli.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [DataType(DataType.Password)]
+            [Display(Name = "Şifre")]
             public string Password { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Beni hatırla?")]
             public bool RememberMe { get; set; }
         }
 
@@ -128,7 +130,7 @@ namespace FabrikaTakipPaneli.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Geçersiz giriş denemesi.");
                     return Page();
                 }
             }

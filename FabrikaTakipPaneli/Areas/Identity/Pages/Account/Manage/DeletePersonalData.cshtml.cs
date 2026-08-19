@@ -47,6 +47,7 @@ namespace FabrikaTakipPaneli.Areas.Identity.Pages.Account.Manage
             /// </summary>
             [Required]
             [DataType(DataType.Password)]
+            [Display(Name = "Şifre")]
             public string Password { get; set; }
         }
 
@@ -81,7 +82,7 @@ namespace FabrikaTakipPaneli.Areas.Identity.Pages.Account.Manage
             {
                 if (!await _userManager.CheckPasswordAsync(user, Input.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Incorrect password.");
+                    ModelState.AddModelError(string.Empty, "Şifre hatalı.");
                     return Page();
                 }
             }
